@@ -1,0 +1,22 @@
+{
+  "name": "replate-food-rescue",
+  "version": "2.4.0",
+  "description": "REPLATE - Premium Food-Surplus Rescue Web Application for College Project & Startup Demo",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "php": "npx -y php-cli -S localhost:8000 -t public"
+  },
+  "keywords": [
+    "food-rescue",
+    "surplus-food",
+    "sustainability",
+    "zero-waste",
+    "php",
+    "mysql",
+    "college-project"
+  ],
+  "author": "REPLATE Team",
+  "license": "MIT"
+}
