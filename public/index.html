@@ -13,7 +13,7 @@
   <meta property="og:image" content="assets/images/mandi.jpg">
   
   <!-- Design System CSS -->
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=2">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
 </head>
 <body>
@@ -65,6 +65,72 @@
         </nav>
       </div>
     </header>
+
+    <!-- MOBILE NAVIGATION DRAWER & OVERLAY -->
+    <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
+    <aside class="mobile-nav-drawer" id="mobile-nav-drawer" aria-label="Mobile Navigation">
+      <div class="mobile-nav-header">
+        <a href="#home" class="brand-logo" onclick="App.navigateTo('home'); App.closeMobileMenu();">
+          <div class="brand-symbol">R</div>
+          <div class="brand-text">
+            <span class="brand-name">REPLATE</span>
+            <span class="brand-tag">Kerala Food Rescue</span>
+          </div>
+        </a>
+        <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">&times;</button>
+      </div>
+
+      <div class="mobile-user-card" id="mobile-user-card">
+        <!-- Injected dynamically in App.updateNavAuthUI() -->
+      </div>
+
+      <ul class="mobile-nav-links">
+        <li>
+          <a class="mobile-nav-link" data-view="home" href="#home">
+            <span class="mobile-link-icon">🏠</span>
+            <span>Home</span>
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav-link" data-view="discover" href="#discover">
+            <span class="mobile-link-icon">🍲</span>
+            <span>Discover Food (15 Drops)</span>
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav-link" data-view="customer-dashboard" href="#customer-dashboard">
+            <span class="mobile-link-icon">📦</span>
+            <span>My Orders & Impact</span>
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav-link" data-view="how-it-works" href="#how-it-works">
+            <span class="mobile-link-icon">⚡</span>
+            <span>How It Works</span>
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav-link" data-view="impact" href="#impact">
+            <span class="mobile-link-icon">🌴</span>
+            <span>Kerala Impact</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="mobile-nav-footer">
+        <button class="btn btn-primary btn-block" onclick="App.navigateTo('discover'); App.closeMobileMenu();" style="width: 100%; justify-content: center; margin-bottom: 16px;">
+          Rescue Food Drops 🌿
+        </button>
+        <div class="mobile-role-selector">
+          <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em; display: block; margin-bottom: 8px;">Portal Views:</span>
+          <div style="display: flex; gap: 6px;">
+            <button class="btn-role-chip active" onclick="App.switchDemoRole('customer'); App.closeMobileMenu();">Customer</button>
+            <button class="btn-role-chip" onclick="App.switchDemoRole('restaurant'); App.closeMobileMenu();">Restaurant</button>
+            <button class="btn-role-chip" onclick="App.switchDemoRole('admin'); App.closeMobileMenu();">Admin</button>
+          </div>
+        </div>
+      </div>
+    </aside>
 
     <!-- MAIN SPA VIEWPORT -->
     <main id="app-main" role="main">

@@ -77,6 +77,7 @@ const App = (function () {
       window.history.pushState({ view }, '', `#${view}`);
     }
 
+    closeMobileMenu();
     window.scrollTo({ top: 0, behavior: 'smooth' });
     renderCurrentView();
     updateNavLinks();
@@ -94,41 +95,76 @@ const App = (function () {
       const view = link.getAttribute('data-view');
       link.classList.toggle('active', view === state.currentView);
     });
+    document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+      const view = link.getAttribute('data-view');
+      link.classList.toggle('active', view === state.currentView);
+    });
   }
 
   // --- NAVBAR AUTH UI (Profile with direct Edit Username) ---
   function updateNavAuthUI() {
     const user = state.currentUser;
     const authContainer = document.getElementById('nav-user-actions');
-    if (!authContainer) return;
+    const mobileUserCard = document.getElementById('mobile-user-card');
 
     if (user) {
       const initial = ((user.name || 'A').trim())[0]?.toUpperCase() || 'A';
-      authContainer.innerHTML = `
-        <div class="user-profile-btn" id="user-profile-btn" title="Click to edit username" style="cursor: pointer;">
-          <div class="user-avatar-sm">${escapeHtml(initial)}</div>
-          <span style="font-weight: 700; color: var(--cream);" id="nav-user-name">${escapeHtml(user.name || 'Anvin')}</span>
-          <span style="font-size: 0.75rem; color: var(--accent-lime); margin-left: 3px;" title="Edit Username">✏️</span>
-        </div>
-        <button class="btn btn-primary btn-sm" id="nav-cta-btn">
-          My Orders
-        </button>
-      `;
+      if (authContainer) {
+        authContainer.innerHTML = `
+          <div class="user-profile-btn" id="user-profile-btn" title="Click to edit username" style="cursor: pointer;">
+            <div class="user-avatar-sm">${escapeHtml(initial)}</div>
+            <span style="font-weight: 700; color: var(--cream);" class="nav-user-name-text" id="nav-user-name">${escapeHtml(user.name || 'Anvin')}</span>
+            <span style="font-size: 0.75rem; color: var(--accent-lime); margin-left: 3px;" class="nav-user-edit-icon" title="Edit Username">✏️</span>
+          </div>
+          <button class="btn btn-primary btn-sm nav-orders-btn" id="nav-cta-btn">
+            My Orders
+          </button>
+        `;
 
-      document.getElementById('user-profile-btn')?.addEventListener('click', () => {
-        App.editUsername();
-      });
+        document.getElementById('user-profile-btn')?.addEventListener('click', () => {
+          App.editUsername();
+        });
 
-      document.getElementById('nav-cta-btn')?.addEventListener('click', () => {
-        navigateTo('customer-dashboard');
-      });
+        document.getElementById('nav-cta-btn')?.addEventListener('click', () => {
+          navigateTo('customer-dashboard');
+        });
+      }
+
+      if (mobileUserCard) {
+        mobileUserCard.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="user-avatar-sm" style="width: 42px; height: 42px; font-size: 1.1rem;">${escapeHtml(initial)}</div>
+            <div>
+              <div style="font-weight: 700; color: var(--cream); font-size: 1rem;" id="mobile-user-name">${escapeHtml(user.name || 'Anvin')}</div>
+              <div style="font-size: 0.72rem; color: var(--accent-lime); font-weight: 600;">Customer • Kerala Rescuer 🌴</div>
+            </div>
+          </div>
+          <button class="btn btn-outline-lime btn-sm" onclick="App.editUsername(); App.closeMobileMenu();" style="padding: 4px 10px; font-size: 0.75rem; border-radius: var(--radius-full);">
+            ✏️ Edit Name
+          </button>
+        `;
+      }
     } else {
-      authContainer.innerHTML = `
-        <button class="btn btn-secondary btn-sm" id="nav-login-btn">Sign In</button>
-        <button class="btn btn-primary btn-sm" id="nav-cta-btn">Rescue Food</button>
-      `;
-      document.getElementById('nav-login-btn')?.addEventListener('click', () => navigateTo('customer-dashboard'));
-      document.getElementById('nav-cta-btn')?.addEventListener('click', () => navigateTo('discover'));
+      if (authContainer) {
+        authContainer.innerHTML = `
+          <button class="btn btn-secondary btn-sm" id="nav-login-btn">Sign In</button>
+          <button class="btn btn-primary btn-sm" id="nav-cta-btn">Rescue Food</button>
+        `;
+        document.getElementById('nav-login-btn')?.addEventListener('click', () => navigateTo('customer-dashboard'));
+        document.getElementById('nav-cta-btn')?.addEventListener('click', () => navigateTo('discover'));
+      }
+      if (mobileUserCard) {
+        mobileUserCard.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="user-avatar-sm" style="width: 38px; height: 38px;">👤</div>
+            <div>
+              <div style="font-weight: 700; color: var(--cream); font-size: 0.95rem;">Guest User</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">Explore surplus Kerala food</div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="App.navigateTo('customer-dashboard'); App.closeMobileMenu();">Sign In</button>
+        `;
+      }
     }
   }
 
@@ -1206,12 +1242,59 @@ const App = (function () {
       });
     });
 
+    document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const view = link.getAttribute('data-view');
+        if (view) {
+          closeMobileMenu();
+          navigateTo(view);
+        }
+      });
+    });
+
+    document.getElementById('mobile-menu-btn')?.addEventListener('click', toggleMobileMenu);
+    document.getElementById('mobile-nav-close')?.addEventListener('click', closeMobileMenu);
+    document.getElementById('mobile-nav-overlay')?.addEventListener('click', closeMobileMenu);
+
     window.addEventListener('scroll', () => {
       const header = document.querySelector('.site-header');
       if (header) {
         header.classList.toggle('scrolled', window.scrollY > 30);
       }
     });
+  }
+
+  function openMobileMenu() {
+    document.getElementById('mobile-nav-drawer')?.classList.add('active');
+    document.getElementById('mobile-nav-overlay')?.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMobileMenu() {
+    document.getElementById('mobile-nav-drawer')?.classList.remove('active');
+    document.getElementById('mobile-nav-overlay')?.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function toggleMobileMenu() {
+    const drawer = document.getElementById('mobile-nav-drawer');
+    if (drawer && drawer.classList.contains('active')) {
+      closeMobileMenu();
+    } else {
+      openMobileMenu();
+    }
+  }
+
+  function switchDemoRole(role) {
+    if (role === 'restaurant') {
+      navigateTo('restaurant-portal');
+    } else if (role === 'admin') {
+      navigateTo('admin-panel');
+    } else {
+      navigateTo('customer-dashboard');
+    }
+    showToast(`Switched view to ${role.toUpperCase()} 🌿`);
   }
 
   function setupHomeInteractions() {
@@ -1320,7 +1403,11 @@ const App = (function () {
     deleteOrder,
     closeModal,
     resetFilters,
-    editUsername
+    editUsername,
+    openMobileMenu,
+    closeMobileMenu,
+    toggleMobileMenu,
+    switchDemoRole
   };
 })();
 

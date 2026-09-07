@@ -488,7 +488,7 @@ const server = http.createServer((req, res) => {
   const queryParams = Object.fromEntries(parsedUrl.searchParams.entries());
 
   if (pathname === '/' || pathname === '/index.html' || pathname === '/index.php') {
-    pathname = '/index.php';
+    pathname = '/index.html';
   }
 
   // --- API HANDLERS ---
@@ -735,17 +735,18 @@ const server = http.createServer((req, res) => {
   }
 
   // --- STATIC FILES ---
-  if (pathname === '/index.php' || pathname === '/public/index.php') {
-    const indexPath = path.join(PUBLIC_DIR, 'index.php');
+  if (pathname === '/index.html' || pathname === '/index.php') {
+    const indexPath = fs.existsSync(path.join(ROOT_DIR, 'index.html'))
+      ? path.join(ROOT_DIR, 'index.html')
+      : path.join(PUBLIC_DIR, 'index.html');
     fs.readFile(indexPath, 'utf8', (err, content) => {
       if (err) {
         res.writeHead(500);
         res.end('Error loading: ' + err.message);
         return;
       }
-      const sanitized = content.replace(/<\?php[\s\S]*?\?>/g, '');
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end(sanitized);
+      res.end(content);
     });
     return;
   }

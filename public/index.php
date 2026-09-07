@@ -1,27 +1,19 @@
-<?php
-/**
- * REPLATE - Master Application View
- * Project: REPLATE - Premium Food-Surplus Rescue Platform
- */
-require_once __DIR__ . '/../config/Config.php';
-$currentUser = Config::getCurrentUser();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>REPLATE | Rescue Food. Reduce Waste. Premium Surplus Marketplace</title>
-  <meta name="description" content="Replate connects top restaurants, cafés, and bakeries with conscious diners to rescue premium surplus food at up to 70% off. Exceptional gastronomy deserves a second chance.">
+  <meta name="description" content="Replate connects top Kerala restaurants, cafés, and kitchens with conscious diners to rescue premium surplus food at up to 70% off.">
   <meta name="theme-color" content="#07110D">
   
   <!-- OpenGraph / Social Meta -->
   <meta property="og:title" content="REPLATE — Rescue Food. Reduce Waste.">
-  <meta property="og:description" content="Discover premium surplus food from Bengaluru's finest restaurants at up to 70% off.">
-  <meta property="og:image" content="assets/images/hero-food.jpg">
+  <meta property="og:description" content="Discover premium surplus food from Kerala's finest restaurants at up to 70% off.">
+  <meta property="og:image" content="assets/images/mandi.jpg">
   
   <!-- Design System CSS -->
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=2">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
 </head>
 <body>
@@ -74,6 +66,72 @@ $currentUser = Config::getCurrentUser();
       </div>
     </header>
 
+    <!-- MOBILE NAVIGATION DRAWER & OVERLAY -->
+    <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
+    <aside class="mobile-nav-drawer" id="mobile-nav-drawer" aria-label="Mobile Navigation">
+      <div class="mobile-nav-header">
+        <a href="#home" class="brand-logo" onclick="App.navigateTo('home'); App.closeMobileMenu();">
+          <div class="brand-symbol">R</div>
+          <div class="brand-text">
+            <span class="brand-name">REPLATE</span>
+            <span class="brand-tag">Kerala Food Rescue</span>
+          </div>
+        </a>
+        <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">&times;</button>
+      </div>
+
+      <div class="mobile-user-card" id="mobile-user-card">
+        <!-- Injected dynamically in App.updateNavAuthUI() -->
+      </div>
+
+      <ul class="mobile-nav-links">
+        <li>
+          <a class="mobile-nav-link" data-view="home" href="#home">
+            <span class="mobile-link-icon">🏠</span>
+            <span>Home</span>
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav-link" data-view="discover" href="#discover">
+            <span class="mobile-link-icon">🍲</span>
+            <span>Discover Food (15 Drops)</span>
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav-link" data-view="customer-dashboard" href="#customer-dashboard">
+            <span class="mobile-link-icon">📦</span>
+            <span>My Orders & Impact</span>
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav-link" data-view="how-it-works" href="#how-it-works">
+            <span class="mobile-link-icon">⚡</span>
+            <span>How It Works</span>
+          </a>
+        </li>
+        <li>
+          <a class="mobile-nav-link" data-view="impact" href="#impact">
+            <span class="mobile-link-icon">🌴</span>
+            <span>Kerala Impact</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="mobile-nav-footer">
+        <button class="btn btn-primary btn-block" onclick="App.navigateTo('discover'); App.closeMobileMenu();" style="width: 100%; justify-content: center; margin-bottom: 16px;">
+          Rescue Food Drops 🌿
+        </button>
+        <div class="mobile-role-selector">
+          <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em; display: block; margin-bottom: 8px;">Portal Views:</span>
+          <div style="display: flex; gap: 6px;">
+            <button class="btn-role-chip active" onclick="App.switchDemoRole('customer'); App.closeMobileMenu();">Customer</button>
+            <button class="btn-role-chip" onclick="App.switchDemoRole('restaurant'); App.closeMobileMenu();">Restaurant</button>
+            <button class="btn-role-chip" onclick="App.switchDemoRole('admin'); App.closeMobileMenu();">Admin</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
     <!-- MAIN SPA VIEWPORT -->
     <main id="app-main" role="main">
       <!-- Dynamically rendered by app.js router -->
@@ -89,7 +147,7 @@ $currentUser = Config::getCurrentUser();
               <span class="brand-name">REPLATE</span>
             </div>
             <p>
-              Replate is a food-surplus rescue platform connecting Kerala's finest restaurants with conscious diners. Mandi, Biryani, Alfam, and artisanal bakes deserve a second chance.
+              Replate is a food-surplus rescue platform connecting Kerala's finest restaurants with conscious diners. Mandi, Biryani, Alfam, and artisanal dishes deserve a second chance.
             </p>
             <div style="margin-top: 18px; font-size: 0.85rem; color: var(--accent-lime);">
               🌴 Certified Zero-Waste Initiative • Kochi • Kozhikode • Trivandrum
@@ -100,9 +158,9 @@ $currentUser = Config::getCurrentUser();
             <h4 class="footer-heading">Marketplace</h4>
             <ul class="footer-links">
               <li><a href="#discover" onclick="App.navigateTo('discover')">Explore All Drops</a></li>
-              <li><a href="#discover" onclick="App.navigateTo('discover')">Artisan Bakeries</a></li>
-              <li><a href="#discover" onclick="App.navigateTo('discover')">Gourmet Dinners</a></li>
-              <li><a href="#discover" onclick="App.navigateTo('discover')">Organic Produce</a></li>
+              <li><a href="#discover" onclick="App.navigateTo('discover')">Mandi & Biriyani</a></li>
+              <li><a href="#discover" onclick="App.navigateTo('discover')">Alfaham & Grills</a></li>
+              <li><a href="#discover" onclick="App.navigateTo('discover')">Porotta & Curries</a></li>
             </ul>
           </div>
 
@@ -139,8 +197,6 @@ $currentUser = Config::getCurrentUser();
       </div>
     </footer>
   </div>
-
-
 
   <!-- SCRIPTS -->
   <script src="assets/js/animations.js"></script>
