@@ -1363,23 +1363,77 @@ const App = (function () {
     navigateTo('discover');
   }
 
-  async function editUsername() {
+  function editUsername() {
     const currentName = state.currentUser?.name || 'Anvin';
-    const newName = window.prompt('Enter your username:', currentName);
-    if (!newName) return;
-    const trimmed = newName.trim();
-    if (!trimmed || trimmed === currentName) return;
-
-    state.currentUser.name = trimmed;
-    localStorage.setItem('replate_user_name', trimmed);
-    try {
-      await API.updateProfile({ name: trimmed });
-    } catch (e) {
-      console.warn('Profile sync:', e);
+    
+    let modal = document.getElementById('edit-username-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'edit-username-modal';
+      modal.className = 'modal-backdrop';
+      document.body.appendChild(modal);
     }
-    updateNavAuthUI();
-    renderCurrentView();
-    showToast(`Username updated to "${trimmed}"! 🌴`);
+    
+    modal.innerHTML = `
+      <div class="modal-sheet" style="max-width: 400px; padding: 0;">
+        <button class="modal-close-btn" onclick="App.closeModal('edit-username-modal')">✕</button>
+        <div class="modal-content-body" style="padding: 24px; text-align: left;">
+          <h3 style="font-size: 1.5rem; color: var(--cream); margin-bottom: 16px; font-family: var(--font-serif);">Edit Profile</h3>
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Username</label>
+            <input type="text" id="edit-username-input" class="form-control" style="width: 100%; padding: 10px 14px; font-size: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-surface); color: var(--text-main);" value="${escapeHtml(currentName)}">
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 12px;">
+            <button class="btn btn-secondary" onclick="App.closeModal('edit-username-modal')">Cancel</button>
+            <button class="btn btn-primary" id="save-username-btn">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Add active class for animation after a tiny delay
+    requestAnimationFrame(() => {
+      modal.classList.add('active');
+      const input = document.getElementById('edit-username-input');
+      input.focus();
+      // Move cursor to end of input
+      input.setSelectionRange(input.value.length, input.value.length);
+    });
+
+    // Handle Save
+    document.getElementById('save-username-btn').addEventListener('click', async () => {
+      const newName = document.getElementById('edit-username-input').value;
+      if (!newName) return;
+      const trimmed = newName.trim();
+      if (!trimmed || trimmed === currentName) {
+        App.closeModal('edit-username-modal');
+        return;
+      }
+
+      const saveBtn = document.getElementById('save-username-btn');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = 'Saving...';
+
+      state.currentUser.name = trimmed;
+      localStorage.setItem('replate_user_name', trimmed);
+      try {
+        await API.updateProfile({ name: trimmed });
+      } catch (e) {
+        console.warn('Profile sync:', e);
+      }
+      
+      updateNavAuthUI();
+      renderCurrentView();
+      showToast(`Username updated to "${trimmed}"! 🌴`);
+      App.closeModal('edit-username-modal');
+    });
+
+    // Handle Enter key
+    document.getElementById('edit-username-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('save-username-btn').click();
+      }
+    });
   }
 
   function escapeHtml(str) {
