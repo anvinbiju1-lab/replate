@@ -724,6 +724,34 @@ const server = http.createServer((req, res) => {
           break;
         }
 
+        case 'admin_dashboard': {
+          const totalMealsSaved = DATA.restaurants.reduce((s, r) => s + (r.meals_saved_count || 0), 0);
+          response = {
+            success: true,
+            metrics: {
+              total_users: DATA.users.length,
+              total_restaurants: DATA.restaurants.length,
+              total_foods: DATA.foods.length,
+              total_orders: DATA.reservations.length,
+              meals_rescued: totalMealsSaved,
+              money_saved_inr: totalMealsSaved * 120,
+              food_waste_prevented_kg: (totalMealsSaved * 0.5).toFixed(0),
+              co2_prevented_kg: (totalMealsSaved * 1.2).toFixed(0)
+            },
+            restaurants: DATA.restaurants,
+            users: DATA.users,
+            orders: DATA.reservations,
+            logs: [
+              { time: '2 min ago', event: 'New reservation', detail: 'Anvin reserved Kuzhimanthi from Mandi Manzil' },
+              { time: '15 min ago', event: 'Pickup completed', detail: 'Alfaham Combo picked up from Bait Al Mandi' },
+              { time: '1 hr ago', event: 'New listing', detail: 'Paragon posted Kerala Fish Curry surplus drop' },
+              { time: '3 hrs ago', event: 'Restaurant joined', detail: 'Kayees Rahmathulla Cafe verified and onboarded' },
+              { time: '5 hrs ago', event: 'Order cancelled', detail: 'Guest cancelled Porotta \u0026 Beef Curry order' }
+            ]
+          };
+          break;
+        }
+
         default:
           response = { success: false, error: 'Action not supported: ' + action };
           break;
