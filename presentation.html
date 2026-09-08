@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REPLATE | Rescue Food. Reduce Waste.</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#07110D',
+                        surface: '#0D1B14',
+                        surfaceHover: '#102019',
+                        primary: '#B7F36B',
+                        primaryGlow: 'rgba(183, 243, 107, 0.2)',
+                        secondary: '#A3B8A8', // Sage
+                        cream: '#F9F6F0',
+                        muted: '#6B7280',
+                        danger: '#EF4444'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    boxShadow: {
+                        'glow': '0 0 40px rgba(183, 243, 107, 0.15)',
+                        'card': '0 10px 30px rgba(0, 0, 0, 0.5)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #07110D;
+            color: #F9F6F0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            visibility: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+        }
+
+        /* Ambient Background Glow */
+        .ambient-glow {
+            position: absolute;
+            width: 60vw;
+            height: 60vw;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(183, 243, 107, 0.03) 0%, rgba(7, 17, 13, 0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content-layer {
+            z-index: 10;
+            width: 100%;
+            max-width: 1200px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Glassmorphism UI */
+        .glass-panel {
+            background: rgba(13, 27, 20, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(183, 243, 107, 0.1);
+            border-radius: 1.5rem;
+        }
+
+        /* Speaker Notes Panel */
+        #speaker-notes {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            z-index: 100;
+            max-width: 800px;
+            width: 90%;
+            display: none;
+            font-size: 0.9rem;
+            color: #A3B8A8;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .nav-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 50;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(183, 243, 107, 0.2);
+            border-color: #B7F36B;
+            color: #B7F36B;
+        }
+
+        /* Cinematic Film Grain Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Status Badges for Live Demo */
+        .status-badge {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 9999px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+            opacity: 0;
+        }
+
+        /* Connecting SVG Lines */
+        .svg-connection {
+            position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
+        }
+
+        /* Custom Scrollbar for inner elements if needed */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(183, 243, 107, 0.2); border-radius: 10px; }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="noise-overlay"></div>
+    <div class="ambient-glow"></div>
+    <div class="ambient-glow" style="background: radial-gradient(circle, rgba(163, 184, 168, 0.02) 0%, rgba(7, 17, 13, 0) 50%); top: 20%; left: 80%;"></div>
+
+    <div class="presentation-container" id="presentation">
+        
+        <!-- SCENE 1: OPENING -->
+        <section class="slide active" id="slide-1" data-notes="Welcome. Today I'm presenting Replate. A platform built on a simple premise: Good food shouldn't become waste. Let's look at how we are giving surplus food a second chance.">
+            <div class="content-layer items-center text-center">
+                <div class="relative mb-8 s1-logo-container">
+                    <!-- Stylized Leaf/Plate Icon -->
+                    <div class="w-24 h-24 rounded-full border-2 border-primary/30 flex items-center justify-center relative overflow-hidden shadow-glow">
+                        <i data-lucide="utensils" class="text-primary w-10 h-10 absolute z-10 s1-icon"></i>
+                        <div class="absolute inset-0 bg-primary/10 rounded-full s1-pulse"></div>
+                    </div>
+                </div>
+                <h1 class="font-serif text-7xl md:text-9xl tracking-tight text-cream mb-4 s1-title">REPLATE</h1>
+                <div class="w-0 h-px bg-primary mb-6 s1-line"></div>
+                <p class="font-sans text-xl md:text-2xl text-secondary font-light tracking-wide s1-tagline">Rescue food. Reduce waste.</p>
+                
+                <!-- Team Members -->
+                <div class="mt-20 flex flex-wrap justify-center items-center gap-x-5 gap-y-3 text-[10px] sm:text-xs tracking-[0.2em] uppercase text-secondary/50 s1-team">
+                    <span>Anvin Biju</span>
+                    <span class="text-primary/30">•</span>
+                    <span>Amal Sojan</span>
+                    <span class="text-primary/30">•</span>
+                    <span>Amar Ziyad</span>
+                    <span class="text-primary/30">•</span>
+                    <span>Enosh Ks</span>
+                    <span class="text-primary/30">•</span>
+                    <span>George Milan</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 2: THE PROBLEM -->
+        <section class="slide" id="slide-2" data-notes="Every day, restaurants prepare fresh food. But anticipating exact demand is impossible. At the end of the day, perfectly good, unsold meals are often thrown away, while people nearby are looking for affordable options.">
+            <div class="content-layer">
+                <h2 class="font-serif text-5xl md:text-7xl mb-16 text-center leading-tight">
+                    <span class="opacity-50 text-secondary s2-t1">Every day, </span><br>
+                    <span class="text-cream s2-t2">good food goes to waste.</span>
+                </h2>
+                
+                <div class="flex justify-center items-center gap-12 mt-8 max-w-4xl mx-auto w-full relative h-48">
+                    <!-- Restaurant Kitchen -->
+                    <div class="flex flex-col items-center gap-4 s2-anim-item z-10">
+                        <div class="w-24 h-24 rounded-2xl bg-surface/80 backdrop-blur border border-white/10 flex flex-col items-center justify-center shadow-lg">
+                            <i data-lucide="store" class="text-cream w-8 h-8 mb-2"></i>
+                            <div class="text-xs text-primary font-mono s2-clock bg-primary/10 px-2 py-1 rounded">08:00 PM</div>
+                        </div>
+                    </div>
+
+                    <!-- Journey / Timeline -->
+                    <div class="flex-1 relative h-32 flex items-center justify-center s2-flow z-0">
+                        <div class="absolute w-full h-px bg-gradient-to-r from-white/20 via-white/10 to-danger/30"></div>
+                        
+                        <!-- Food Items -->
+                        <div class="absolute left-1/4 w-12 h-12 rounded-full bg-surface border border-white/20 flex items-center justify-center shadow-md s2-meal-1">
+                            <i data-lucide="utensils" class="text-secondary w-5 h-5 s2-meal-icon"></i>
+                        </div>
+                        <div class="absolute left-2/4 w-12 h-12 rounded-full bg-surface border border-white/20 flex items-center justify-center shadow-md s2-meal-2">
+                            <i data-lucide="utensils" class="text-secondary w-5 h-5 s2-meal-icon"></i>
+                        </div>
+                        <div class="absolute left-3/4 w-12 h-12 rounded-full bg-surface border border-white/20 flex items-center justify-center shadow-md s2-meal-3">
+                            <i data-lucide="utensils" class="text-secondary w-5 h-5 s2-meal-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Waste Bin -->
+                    <div class="flex flex-col items-center gap-4 s2-anim-item z-10">
+                        <div class="w-24 h-24 rounded-2xl bg-surface/80 backdrop-blur flex items-center justify-center border border-white/5 s2-bin-container relative overflow-hidden transition-colors">
+                            <div class="absolute inset-0 bg-danger/0 s2-bin-glow"></div>
+                            <i data-lucide="trash-2" class="text-muted w-8 h-8 s2-bin-icon relative z-10 transition-colors"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-12 s2-subtitle opacity-0">
+                    <p class="text-2xl text-cream font-serif italic">Meanwhile, people are looking for affordable meals.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 3: THE OPPORTUNITY -->
+        <section class="slide" id="slide-3" data-notes="What if this surplus had another destination? Instead of a waste bin, what if it went to a customer at a discount? Rescue it. Don't waste it.">
+            <div class="content-layer items-center text-center">
+                <h2 class="font-serif text-5xl md:text-6xl mb-12 s3-title">
+                    <span class="text-cream">What if surplus food had<br></span>
+                    <span class="text-primary italic">another destination?</span>
+                </h2>
+
+                <div class="flex items-center gap-8 my-12 s3-visualization">
+                    <div class="w-16 h-16 rounded-xl bg-surface border border-danger/30 flex items-center justify-center s3-waste">
+                        <i data-lucide="trash-2" class="text-danger w-6 h-6"></i>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 s3-arrow-rev">
+                        <div class="w-2 h-2 rounded-full bg-primary/50"></div>
+                        <div class="w-16 h-px bg-primary/50"></div>
+                        <div class="w-2 h-2 rounded-full bg-primary/50"></div>
+                    </div>
+
+                    <div class="w-24 h-24 rounded-full bg-primary/10 border border-primary flex items-center justify-center shadow-glow s3-replate">
+                        <i data-lucide="utensils" class="text-primary w-8 h-8"></i>
+                    </div>
+
+                    <div class="flex items-center gap-2 s3-arrow-fwd">
+                        <div class="w-2 h-2 rounded-full bg-primary/50"></div>
+                        <div class="w-16 h-px bg-primary/50"></div>
+                        <div class="w-2 h-2 rounded-full bg-primary/50"></div>
+                    </div>
+
+                    <div class="w-16 h-16 rounded-xl bg-surface border border-white/10 flex items-center justify-center s3-customer">
+                        <i data-lucide="user" class="text-cream w-6 h-6"></i>
+                    </div>
+                </div>
+
+                <h3 class="font-sans text-3xl font-medium tracking-tight mt-8 s3-tagline">
+                    <span class="text-cream">Rescue it. </span>
+                    <span class="text-secondary">Don't waste it.</span>
+                </h3>
+            </div>
+        </section>
+
+        <!-- SCENE 4: THE SOLUTION (UI Mockup) -->
+        <section class="slide" id="slide-4" data-notes="Meet Replate. A platform where restaurants list surplus food at a discount, and customers reserve it for pickup. It's a win-win.">
+            <div class="content-layer">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <h2 class="font-serif text-5xl md:text-7xl mb-6 text-primary s4-title">Meet Replate.</h2>
+                        <p class="text-xl text-secondary leading-relaxed s4-text">
+                            A digital marketplace connecting local food businesses with conscious consumers.
+                        </p>
+                    </div>
+                    
+                    <!-- UI Mockup -->
+                    <div class="glass-panel p-6 w-full max-w-sm mx-auto relative overflow-hidden s4-ui">
+                        <!-- App Header -->
+                        <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                            <span class="font-serif text-xl text-primary font-semibold">Replate</span>
+                            <i data-lucide="map-pin" class="w-5 h-5 text-secondary"></i>
+                        </div>
+                        
+                        <!-- Food Card -->
+                        <div class="bg-surfaceHover rounded-xl p-4 border border-white/5 relative">
+                            <div class="absolute top-4 right-4 bg-primary/20 text-primary text-xs font-bold px-2 py-1 rounded s4-discount opacity-0 scale-50">
+                                61% OFF
+                            </div>
+                            
+                            <div class="w-full h-32 bg-black/40 rounded-lg mb-4 flex items-center justify-center">
+                                <i data-lucide="drumstick" class="w-12 h-12 text-secondary/50"></i>
+                            </div>
+                            
+                            <h4 class="text-lg font-medium text-cream mb-1">Chicken Biryani (Full)</h4>
+                            <p class="text-sm text-secondary mb-4">Thalassery Kitchen • 2.1 km</p>
+                            
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <div class="text-sm text-muted line-through s4-old-price relative inline-block">
+                                        ₹229
+                                        <div class="absolute top-1/2 left-0 w-0 h-px bg-danger s4-strike"></div>
+                                    </div>
+                                    <div class="text-3xl font-bold text-primary s4-new-price opacity-0 translate-y-2">₹89</div>
+                                </div>
+                                
+                                <button class="bg-surface border border-white/10 text-cream px-5 py-2 rounded-lg text-sm font-medium transition-colors s4-btn relative overflow-hidden">
+                                    <span class="relative z-10">Reserve</span>
+                                    <div class="absolute inset-0 bg-primary translate-y-full s4-btn-fill"></div>
+                                </button>
+                            </div>
+                            <div class="mt-3 text-xs text-secondary flex items-center gap-2">
+                                <i data-lucide="clock" class="w-3 h-3"></i> Pickup: 8:00 PM - 9:30 PM
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 5: HOW IT WORKS (LIVE DEMO) -->
+        <section class="slide" id="slide-5" data-notes="Let's see it in action. A restaurant publishes 6 meals. It instantly appears on the customer app. A customer reserves 2. The restaurant receives the order, and updates the status from pending to completed.">
+            <div class="content-layer">
+                <h2 class="font-serif text-4xl md:text-5xl mb-10 text-center text-cream s5-title">The Replate Ecosystem</h2>
+                
+                <div class="flex justify-between items-stretch gap-6 w-full max-w-6xl mx-auto h-[400px]">
+                    
+                    <!-- 1. Restaurant Publishes -->
+                    <div class="flex-1 glass-panel p-5 flex flex-col relative s5-panel-1 opacity-0 translate-y-8">
+                        <div class="text-xs text-secondary font-medium uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="store" class="w-4 h-4"></i> Restaurant App</div>
+                        <div class="bg-surface border border-white/5 rounded-lg p-4 flex-1">
+                            <h4 class="text-sm text-cream mb-4 border-b border-white/10 pb-2">Create Listing</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="text-[10px] text-muted mb-1">Item</div>
+                                    <div class="text-sm text-cream bg-background px-2 py-1 rounded border border-white/5">Alfaham (Full)</div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <div class="flex-1">
+                                        <div class="text-[10px] text-muted mb-1">Price</div>
+                                        <div class="text-sm text-primary font-bold bg-primary/10 px-2 py-1 rounded border border-primary/20">₹89</div>
+                                    </div>
+                                    <div class="w-16">
+                                        <div class="text-[10px] text-muted mb-1">Qty</div>
+                                        <div class="text-sm text-cream font-bold bg-background px-2 py-1 rounded border border-white/5 text-center">6</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="w-full mt-6 bg-white/5 hover:bg-white/10 text-cream text-xs py-2 rounded border border-white/10 transition-colors s5-action-publish">
+                                Publish Listing
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Connector 1 -->
+                    <div class="w-16 relative flex items-center justify-center">
+                        <div class="w-full h-px bg-white/10"></div>
+                        <div class="absolute w-3 h-3 bg-primary rounded-full shadow-glow s5-dot-1 opacity-0"></div>
+                    </div>
+
+                    <!-- 2. Customer Reserves -->
+                    <div class="flex-1 glass-panel p-5 flex flex-col relative s5-panel-2 opacity-0 translate-y-8 border-primary/20">
+                        <div class="text-xs text-primary font-medium uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="smartphone" class="w-4 h-4"></i> Customer App</div>
+                        <div class="bg-background rounded-[1.5rem] border border-white/10 p-4 flex-1 relative overflow-hidden flex flex-col">
+                            <div class="text-sm font-serif text-cream mb-3">Nearby Rescues</div>
+                            
+                            <!-- The Card -->
+                            <div class="bg-surfaceHover rounded-xl p-3 border border-white/5 transform scale-95 opacity-0 s5-customer-card relative">
+                                <div class="absolute top-2 right-2 bg-background border border-white/10 text-cream text-[10px] px-2 py-0.5 rounded-full s5-qty-badge">6 left</div>
+                                <h4 class="text-sm font-medium text-cream">Alfaham (Full)</h4>
+                                <p class="text-[10px] text-secondary mb-3">Thalassery Kitchen</p>
+                                <div class="flex justify-between items-end">
+                                    <div class="text-lg font-bold text-primary">₹89</div>
+                                    <button class="bg-primary text-background text-xs font-bold px-3 py-1.5 rounded s5-action-reserve">
+                                        Reserve 2
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connector 2 -->
+                    <div class="w-16 relative flex items-center justify-center">
+                        <div class="w-full h-px bg-white/10"></div>
+                        <div class="absolute w-3 h-3 bg-primary rounded-full shadow-glow s5-dot-2 opacity-0"></div>
+                    </div>
+
+                    <!-- 3. Restaurant Dashboard Status -->
+                    <div class="flex-1 glass-panel p-5 flex flex-col relative s5-panel-3 opacity-0 translate-y-8">
+                        <div class="text-xs text-secondary font-medium uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Live Orders</div>
+                        <div class="bg-surface border border-white/5 rounded-lg p-4 flex-1">
+                            <h4 class="text-sm text-cream mb-4 border-b border-white/10 pb-2">Active Reservations</h4>
+                            
+                            <!-- The Order -->
+                            <div class="bg-background border border-white/5 rounded-lg p-3 opacity-0 s5-order-card transform translate-x-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <div class="text-sm font-medium text-cream">2x Alfaham (Full)</div>
+                                        <div class="text-[10px] text-muted">ID: #RP-8492</div>
+                                    </div>
+                                    <div class="text-sm font-bold text-primary">₹178</div>
+                                </div>
+                                
+                                <!-- Morphing Status Badge -->
+                                <div class="relative w-full h-8 mt-3 bg-surface rounded-full overflow-hidden border border-white/5">
+                                    <div class="status-badge bg-yellow-500/20 text-yellow-500 border border-yellow-500/30 s5-status-pending">Pending</div>
+                                    <div class="status-badge bg-blue-500/20 text-blue-400 border border-blue-500/30 s5-status-confirmed">Confirmed</div>
+                                    <div class="status-badge bg-primary/20 text-primary border border-primary/30 s5-status-ready">Ready for Pickup</div>
+                                    <div class="status-badge bg-white/10 text-secondary border border-white/10 s5-status-completed">Completed</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 6: CUSTOMER EXPERIENCE -->
+        <section class="slide" id="slide-6" data-notes="For the customer, the experience is elegant and intuitive. Finding affordable, sustainable food is as easy as ordering delivery.">
+            <div class="content-layer items-center">
+                <h2 class="font-serif text-4xl md:text-5xl mb-12 text-center text-cream s6-title">The Customer Experience</h2>
+                
+                <div class="glass-panel p-2 rounded-[2rem] w-full max-w-[320px] s6-phone">
+                    <div class="bg-background rounded-[1.75rem] h-[600px] overflow-hidden flex flex-col relative border border-white/5">
+                        <!-- Fake Status Bar -->
+                        <div class="h-6 w-full flex justify-between items-center px-6 pt-2 text-[10px] text-muted">
+                            <span>9:41</span>
+                            <div class="flex gap-1"><i data-lucide="wifi" class="w-3 h-3"></i><i data-lucide="battery-full" class="w-3 h-3"></i></div>
+                        </div>
+
+                        <!-- Content Area -->
+                        <div class="p-5 flex-1 overflow-hidden s6-view-search">
+                            <h3 class="text-2xl font-serif text-cream mb-4">What are you craving?</h3>
+                            
+                            <!-- Search Bar -->
+                            <div class="bg-surface rounded-xl p-3 flex items-center gap-3 border border-white/10 mb-6">
+                                <i data-lucide="search" class="text-muted w-4 h-4"></i>
+                                <span class="text-secondary text-sm s6-typing"></span>
+                            </div>
+
+                            <!-- Filter Pills -->
+                            <div class="flex gap-2 mb-6 overflow-hidden">
+                                <div class="bg-primary/20 text-primary border border-primary/30 px-3 py-1 rounded-full text-xs font-medium s6-pill">Mandi</div>
+                                <div class="bg-surface text-secondary px-3 py-1 rounded-full text-xs border border-white/5 s6-pill">Snacks</div>
+                                <div class="bg-surface text-secondary px-3 py-1 rounded-full text-xs border border-white/5 s6-pill">Meals</div>
+                            </div>
+
+                            <!-- Result Card -->
+                            <div class="bg-surfaceHover rounded-xl p-4 border border-white/5 s6-result opacity-0 translate-y-4 relative">
+                                <div class="w-full h-32 bg-black/40 rounded-lg mb-4"></div>
+                                <h4 class="text-lg font-medium text-cream mb-1">Kuzhi Mandi (Half)</h4>
+                                <div class="flex justify-between items-end mt-2">
+                                    <div>
+                                        <div class="text-xs text-muted line-through">₹399</div>
+                                        <div class="text-xl font-bold text-primary">₹149</div>
+                                    </div>
+                                    <button class="bg-primary text-background font-medium px-4 py-2 rounded-lg text-sm s6-click-btn">
+                                        Reserve
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Success Overlay (Hidden initially) -->
+                        <div class="absolute inset-0 bg-background/95 backdrop-blur-sm z-20 flex flex-col items-center justify-center opacity-0 pointer-events-none s6-success">
+                            <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4 s6-check-circle">
+                                <i data-lucide="check" class="text-primary w-8 h-8 s6-check"></i>
+                            </div>
+                            <h3 class="font-serif text-2xl text-cream mb-2">Meal Rescued!</h3>
+                            <p class="text-sm text-secondary text-center px-8">Your reservation is confirmed. Pickup between 8-9 PM.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 7: CUSTOMER DASHBOARD -->
+        <section class="slide" id="slide-7" data-notes="Customers can track their impact. Every meal rescued is money saved and CO2 emissions prevented. It turns ordering food into a positive action.">
+            <div class="content-layer">
+                <h2 class="font-serif text-5xl mb-12 text-cream s7-title">More than just ordering.<br><span class="text-secondary text-3xl">Making an impact.</span></h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Impact Cards -->
+                    <div class="glass-panel p-6 s7-card">
+                        <i data-lucide="shopping-bag" class="text-primary w-8 h-8 mb-4"></i>
+                        <div class="text-4xl font-bold text-cream mb-1 s7-num-1">0</div>
+                        <p class="text-secondary text-sm">Meals Rescued</p>
+                    </div>
+
+                    <div class="glass-panel p-6 s7-card">
+                        <i data-lucide="wallet" class="text-primary w-8 h-8 mb-4"></i>
+                        <div class="text-4xl font-bold text-cream mb-1">₹<span class="s7-num-2">0</span></div>
+                        <p class="text-secondary text-sm">Money Saved</p>
+                    </div>
+
+                    <div class="glass-panel p-6 s7-card border-primary/30 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-primary/5"></div>
+                        <i data-lucide="leaf" class="text-primary w-8 h-8 mb-4 relative z-10"></i>
+                        <div class="text-4xl font-bold text-primary mb-1 relative z-10"><span class="s7-num-3">0</span> kg</div>
+                        <p class="text-primary/70 text-sm relative z-10">Food Waste Prevented</p>
+                    </div>
+                </div>
+                
+                <p class="text-xs text-muted mt-8 text-center uppercase tracking-widest">* Demo platform data</p>
+            </div>
+        </section>
+
+        <!-- SCENE 8: RESTAURANT EXPERIENCE -->
+        <section class="slide" id="slide-8" data-notes="For restaurants, Replate turns potential loss into recovered revenue. Listing an item takes seconds.">
+            <div class="content-layer">
+                <h2 class="font-serif text-4xl mb-10 text-cream s8-title">Turn surplus into opportunity.</h2>
+                
+                <div class="glass-panel p-8 w-full max-w-4xl mx-auto s8-dashboard">
+                    <div class="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded bg-surface border border-white/10 flex items-center justify-center">
+                                <i data-lucide="store" class="text-secondary"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-cream">Thalassery Kitchen Dash</h3>
+                                <p class="text-xs text-secondary">Active</p>
+                            </div>
+                        </div>
+                        <button class="bg-primary text-background px-4 py-2 rounded font-medium text-sm flex items-center gap-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Add Surplus
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-8">
+                        <!-- Form Mockup -->
+                        <div class="col-span-5 bg-surface rounded-xl p-5 border border-white/5 s8-form relative">
+                            <div class="absolute inset-0 bg-black/50 z-10 flex items-center justify-center rounded-xl opacity-0 s8-form-overlay">
+                                <div class="bg-primary/20 text-primary px-4 py-2 rounded-lg font-medium">Published to App</div>
+                            </div>
+                            <h4 class="text-sm font-medium text-cream mb-4">New Listing</h4>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-xs text-muted block mb-1">Item Name</label>
+                                    <div class="w-full bg-background border border-white/10 rounded p-2 text-sm text-cream">Alfaham Chicken (Full)</div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="flex-1">
+                                        <label class="text-xs text-muted block mb-1">Original (₹)</label>
+                                        <div class="w-full bg-background border border-white/10 rounded p-2 text-sm text-secondary">229</div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <label class="text-xs text-primary block mb-1">Rescue Price (₹)</label>
+                                        <div class="w-full bg-primary/10 border border-primary/30 rounded p-2 text-sm text-primary font-medium s8-input-price">89</div>
+                                    </div>
+                                </div>
+                                <div class="pt-2 text-right">
+                                    <button class="bg-white/10 text-cream px-4 py-2 rounded text-xs font-medium s8-publish-btn">Publish Listing</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Listings -->
+                        <div class="col-span-7">
+                            <h4 class="text-sm font-medium text-cream mb-4">Active Listings</h4>
+                            <div class="space-y-3 relative h-48">
+                                <div class="bg-surface rounded-lg p-3 flex justify-between items-center border border-white/5 s8-listing-1">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-black/30 rounded"></div>
+                                        <div>
+                                            <div class="text-sm text-cream">Parotta & Beef Roast</div>
+                                            <div class="text-xs text-secondary">3 left • Pickup 9 PM</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-primary font-medium text-sm">₹49</div>
+                                </div>
+
+                                <!-- New listing appears here -->
+                                <div class="bg-primary/5 rounded-lg p-3 flex justify-between items-center border border-primary/30 absolute w-full top-0 opacity-0 translate-y-4 s8-new-listing">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-black/30 rounded flex items-center justify-center"><i data-lucide="sparkles" class="w-4 h-4 text-primary"></i></div>
+                                        <div>
+                                            <div class="text-sm text-cream">Alfaham Chicken (Full)</div>
+                                            <div class="text-xs text-primary">Just added • 6 left</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-primary font-medium text-sm">₹89</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 9: ADMIN / 3 ROLES -->
+        <section class="slide" id="slide-9" data-notes="Replate isn't just a website; it's a platform with three distinct experiences: Customers, Restaurants, and Platform Admins overseeing operations.">
+            <div class="content-layer text-center">
+                <h2 class="font-serif text-4xl mb-12 text-cream s9-title">One platform.<br><span class="text-secondary italic">Three experiences.</span></h2>
+                
+                <div class="relative flex justify-center items-center gap-8 s9-panels w-full max-w-5xl mx-auto h-[300px]">
+                    
+                    <!-- SVG Connection Lines (Behind panels) -->
+                    <svg class="absolute inset-0 w-full h-full z-0" style="pointer-events: none;">
+                        <path class="s9-connector" d="M 250 150 L 450 150" stroke="rgba(183, 243, 107, 0.3)" stroke-width="2" fill="none" />
+                        <path class="s9-connector2" d="M 750 150 L 550 150" stroke="rgba(183, 243, 107, 0.3)" stroke-width="2" fill="none" />
+                    </svg>
+
+                    <div class="w-64 glass-panel p-6 flex flex-col items-center border-white/10 z-10 s9-panel-c bg-surface/90">
+                        <i data-lucide="smartphone" class="w-8 h-8 text-secondary mb-4"></i>
+                        <h4 class="font-medium text-cream mb-2">Customer</h4>
+                        <p class="text-xs text-secondary text-center">App-like discovery and reservation.</p>
+                    </div>
+
+                    <div class="w-72 glass-panel p-8 flex flex-col items-center border-primary/30 bg-surfaceHover relative z-10 shadow-glow s9-panel-a">
+                        <div class="absolute -top-3 bg-primary text-background text-xs font-bold px-3 py-1 rounded-full">CORE</div>
+                        <i data-lucide="shield-check" class="w-10 h-10 text-primary mb-4"></i>
+                        <h4 class="text-xl font-medium text-cream mb-2">Platform Admin</h4>
+                        <p class="text-sm text-secondary text-center mb-6">Oversee users, approve restaurants, monitor platform metrics and health.</p>
+                        
+                        <!-- Mini Data Lines -->
+                        <div class="w-full space-y-2">
+                            <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden"><div class="w-3/4 h-full bg-primary/50"></div></div>
+                            <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden"><div class="w-1/2 h-full bg-secondary/50"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="w-64 glass-panel p-6 flex flex-col items-center border-white/10 z-10 s9-panel-r bg-surface/90">
+                        <i data-lucide="store" class="w-8 h-8 text-secondary mb-4"></i>
+                        <h4 class="font-medium text-cream mb-2">Restaurant</h4>
+                        <p class="text-xs text-secondary text-center">Inventory & reservation management.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 10: ARCHITECTURE -->
+        <section class="slide" id="slide-10" data-notes="Technically, how does this work? It's a standard robust architecture. The frontend communicates with a backend server, which processes business logic and updates the central database.">
+            <div class="content-layer">
+                <h2 class="font-serif text-4xl mb-16 text-center text-cream s10-title">System Architecture</h2>
+                
+                <div class="relative w-full max-w-3xl mx-auto h-96 flex flex-col items-center justify-between">
+                    <!-- SVG Lines (Drawn behind nodes) -->
+                    <svg class="svg-connection" preserveAspectRatio="none" viewBox="0 0 100 100" width="100%" height="100%">
+                        <!-- Client to Backend -->
+                        <path id="arch-path-1" d="M50 15 L50 45" stroke="rgba(183, 243, 107, 0.2)" stroke-width="0.5" fill="none" stroke-dasharray="1 1" />
+                        <!-- Backend to DB -->
+                        <path id="arch-path-2" d="M50 55 L50 85" stroke="rgba(163, 184, 168, 0.2)" stroke-width="0.5" fill="none" stroke-dasharray="1 1" />
+                    </svg>
+
+                    <!-- Nodes -->
+                    <div class="bg-surface/80 backdrop-blur border border-white/10 px-8 py-4 rounded-xl text-cream font-medium z-10 s10-node shadow-lg flex items-center gap-3">
+                        <i data-lucide="monitor-smartphone" class="w-5 h-5 text-secondary"></i> Client Application
+                    </div>
+                    
+                    <div class="bg-surfaceHover border border-primary/40 px-10 py-5 rounded-xl text-primary font-medium shadow-glow z-10 s10-node relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-primary/5 s10-server-pulse"></div>
+                        <div class="relative z-10 flex items-center gap-3">
+                            <i data-lucide="server-cog" class="w-6 h-6"></i> PHP Backend Core
+                        </div>
+                    </div>
+                    
+                    <div class="bg-surface/80 backdrop-blur border border-white/10 px-8 py-4 rounded-xl text-cream font-medium flex items-center gap-3 z-10 s10-node shadow-lg">
+                        <i data-lucide="database" class="w-5 h-5 text-secondary"></i> MySQL Database
+                    </div>
+
+                    <!-- Animated Data Packets -->
+                    <div class="absolute w-2 h-2 bg-primary rounded-full shadow-glow z-20 s10-packet opacity-0" style="left: calc(50% - 4px); top: 15%;"></div>
+                    <div class="absolute w-3 h-3 bg-secondary rounded-full z-20 s10-packet-2 opacity-0" style="left: calc(50% - 6px); top: 55%;"></div>
+                </div>
+
+                <div class="text-center mt-8 text-sm text-secondary font-medium tracking-wide s10-caption opacity-0">
+                    Secure API routing handling reservations and authentication.
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 11: DATABASE -->
+        <section class="slide" id="slide-11" data-notes="Instead of looking at raw technical tables, think of our database as a connected hub. The Reservation connects the User (who is ordering) to the Food (what is being ordered), acting as the smart bridge that makes the platform work.">
+            <div class="content-layer text-center">
+                <h2 class="font-serif text-4xl mb-12 text-cream s11-title">Connecting the data.</h2>
+                
+                <div class="flex justify-between items-start w-full max-w-5xl mx-auto relative mt-8 px-2 sm:px-8">
+                    
+                    <!-- SVG Connection Lines -->
+                    <svg class="absolute inset-0 w-full h-[300px] z-0 pointer-events-none" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                        <!-- User to Reservation -->
+                        <path id="db-line-1" d="M 150 60 C 300 60, 350 170, 500 170" stroke="rgba(183, 243, 107, 0.4)" stroke-width="2" fill="none" class="s11-path" />
+                        <!-- Food to Reservation -->
+                        <path id="db-line-2" d="M 850 60 C 700 60, 650 170, 500 170" stroke="rgba(183, 243, 107, 0.4)" stroke-width="2" fill="none" class="s11-path" />
+                    </svg>
+
+                    <!-- Users Table (Left) -->
+                    <div class="bg-surface/90 backdrop-blur border border-white/10 rounded-xl p-4 sm:p-5 w-[30%] max-w-[260px] s11-table z-10 shadow-lg mt-4">
+                        <div class="font-medium text-cream text-sm sm:text-lg mb-4 border-b border-white/10 pb-3 flex items-center gap-2 sm:gap-3">
+                            <div class="bg-white/10 p-1.5 sm:p-2 rounded-lg"><i data-lucide="users" class="w-4 h-4 sm:w-5 sm:h-5 text-secondary"></i></div>
+                            Users Table
+                        </div>
+                        <div class="text-xs sm:text-sm text-left text-muted space-y-3">
+                            <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-primary/50 flex-shrink-0"></div> Account Profile</div>
+                            <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-white/20 flex-shrink-0"></div> Contact Details</div>
+                            <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-white/20 flex-shrink-0"></div> User Role</div>
+                        </div>
+                    </div>
+
+                    <!-- Central Bridge -->
+                    <div class="bg-surfaceHover border-2 border-primary/30 rounded-xl p-4 sm:p-6 w-[35%] max-w-[320px] shadow-glow s11-table z-10 mt-32 relative">
+                        <div class="font-medium text-primary text-base sm:text-xl mb-4 border-b border-primary/20 pb-3 text-left flex items-center gap-2 sm:gap-3">
+                            <div class="bg-primary/20 p-1.5 sm:p-2 rounded-lg"><i data-lucide="bookmark" class="w-4 h-4 sm:w-5 sm:h-5"></i></div>
+                            Reservations
+                        </div>
+                        <div class="text-xs sm:text-sm text-left text-cream space-y-4">
+                            <div class="flex items-center justify-between bg-white/5 p-2 rounded border border-white/10 s11-link-u transition-colors">
+                                <span class="text-secondary text-[10px] sm:text-xs uppercase tracking-wider">Who ordered?</span>
+                                <i data-lucide="arrow-left" class="w-3 h-3 sm:w-4 sm:h-4 text-primary"></i>
+                            </div>
+                            <div class="flex items-center justify-between bg-white/5 p-2 rounded border border-white/10 s11-link-f transition-colors">
+                                <span class="text-secondary text-[10px] sm:text-xs uppercase tracking-wider">What food?</span>
+                                <i data-lucide="arrow-right" class="w-3 h-3 sm:w-4 sm:h-4 text-primary"></i>
+                            </div>
+                            <div class="flex items-center justify-between pt-2">
+                                <span class="text-muted text-[10px] sm:text-xs uppercase tracking-wider">Status</span>
+                                <span class="text-primary font-medium text-[10px] sm:text-xs border border-primary/30 px-2 py-1 rounded bg-primary/10">Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Foods Table (Right) -->
+                    <div class="bg-surface/90 backdrop-blur border border-white/10 rounded-xl p-4 sm:p-5 w-[30%] max-w-[260px] s11-table z-10 shadow-lg mt-4">
+                        <div class="font-medium text-cream text-sm sm:text-lg mb-4 border-b border-white/10 pb-3 flex items-center gap-2 sm:gap-3">
+                            <div class="bg-white/10 p-1.5 sm:p-2 rounded-lg"><i data-lucide="utensils" class="w-4 h-4 sm:w-5 sm:h-5 text-secondary"></i></div>
+                            Foods Table
+                        </div>
+                        <div class="text-xs sm:text-sm text-left text-muted space-y-3">
+                            <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-primary/50 flex-shrink-0"></div> Food Listing Details</div>
+                            <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-white/20 flex-shrink-0"></div> Pricing & Quantity</div>
+                            <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-white/20 flex-shrink-0"></div> Restaurant ID</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 12: TECH STACK -->
+        <section class="slide" id="slide-12" data-notes="We utilized a robust and proven web stack. HTML, CSS and JS for responsive interfaces. PHP for server logic. MySQL for structured data.">
+            <div class="content-layer items-center">
+                <h2 class="font-serif text-4xl mb-16 text-cream s12-title">Built with a modern stack.</h2>
+                
+                <div class="flex flex-col-reverse items-center gap-4 w-full max-w-md s12-stack">
+                    <!-- Server -->
+                    <div class="w-full glass-panel py-4 px-6 flex justify-between items-center border-white/5 s12-layer">
+                        <span class="text-muted font-medium">Server Environment</span>
+                        <span class="text-secondary font-mono text-sm">Apache / LAMP</span>
+                    </div>
+                    
+                    <!-- Database -->
+                    <div class="w-full glass-panel py-4 px-6 flex justify-between items-center border-white/5 s12-layer">
+                        <span class="text-muted font-medium">Data Layer</span>
+                        <span class="text-secondary font-mono text-sm">MySQL</span>
+                    </div>
+                    
+                    <!-- Backend -->
+                    <div class="w-full glass-panel py-4 px-6 flex justify-between items-center border-primary/20 bg-surfaceHover s12-layer">
+                        <span class="text-primary font-medium">Application Logic</span>
+                        <span class="text-primary font-mono text-sm">PHP (PDO)</span>
+                    </div>
+                    
+                    <!-- Frontend -->
+                    <div class="w-full glass-panel py-4 px-6 flex justify-between items-center border-white/5 s12-layer">
+                        <span class="text-muted font-medium">User Interface</span>
+                        <span class="text-secondary font-mono text-sm">HTML / CSS / JS</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 13: IMPACT -->
+        <section class="slide" id="slide-13" data-notes="Ultimately, Replate is about impact. By connecting surplus with demand, we create a system where everyone wins, and waste is significantly reduced.">
+            <div class="content-layer items-center justify-center">
+                <h2 class="font-serif text-6xl mb-8 text-cream s13-title">Every rescue counts.</h2>
+                
+                <div class="text-center mb-16 relative">
+                    <div class="absolute inset-0 bg-primary/20 blur-[100px] rounded-full s13-glow opacity-0"></div>
+                    <div class="text-8xl md:text-9xl font-serif text-primary mb-2 relative z-10"><span id="s13-counter">0</span></div>
+                    <p class="text-xl text-secondary tracking-widest uppercase relative z-10">Meals Rescued</p>
+                </div>
+
+                <div class="flex gap-12 text-center opacity-0 s13-benefits relative z-10">
+                    <div>
+                        <div class="text-2xl font-medium text-cream">Customers</div>
+                        <div class="text-sm text-secondary">Save money</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-medium text-cream">Restaurants</div>
+                        <div class="text-sm text-secondary">Recover cost</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-medium text-primary">Environment</div>
+                        <div class="text-sm text-primary/70">Less waste</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SCENE 14: FUTURE SCOPE -->
+        <section class="slide" id="slide-14" data-notes="Looking ahead, Replate has vast potential. From integrated digital payments to AI predicting surplus based on weather and events, the foundation is set for scale.">
+            <div class="content-layer">
+                <h2 class="font-serif text-4xl mb-16 text-cream s14-title">Where Replate goes next.</h2>
+                
+                <div class="relative w-full max-w-4xl mx-auto pl-8">
+                    <!-- Vertical Timeline Line -->
+                    <div class="absolute left-0 top-0 bottom-0 w-px bg-white/10 s14-line"></div>
+                    
+                    <div class="space-y-8">
+                        <div class="relative s14-item">
+                            <div class="absolute -left-[37px] top-1 w-4 h-4 rounded-full bg-primary shadow-glow"></div>
+                            <h4 class="text-xl font-medium text-primary mb-1">Phase 1: Foundation</h4>
+                            <p class="text-secondary text-sm">Core marketplace, user roles, reservation system.</p>
+                        </div>
+                        
+                        <div class="relative s14-item opacity-50">
+                            <div class="absolute -left-[35px] top-1 w-3 h-3 rounded-full bg-white/20 border border-white/50"></div>
+                            <h4 class="text-xl font-medium text-cream mb-1">Phase 2: Digital Payments</h4>
+                            <p class="text-secondary text-sm">In-app transactions for seamless pickup experiences.</p>
+                        </div>
+
+                        <div class="relative s14-item opacity-30">
+                            <div class="absolute -left-[35px] top-1 w-3 h-3 rounded-full bg-white/20 border border-white/50"></div>
+                            <h4 class="text-xl font-medium text-cream mb-1">Phase 3: Smart Recommendations</h4>
+                            <p class="text-secondary text-sm">AI-driven food matching based on user preferences.</p>
+                        </div>
+                        
+                        <div class="relative s14-item opacity-20">
+                            <div class="absolute -left-[35px] top-1 w-3 h-3 rounded-full bg-white/20 border border-white/50"></div>
+                            <h4 class="text-xl font-medium text-cream mb-1">Phase 4: Predictive Analytics</h4>
+                            <p class="text-secondary text-sm">Helping restaurants forecast demand to prevent surplus initially.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 15: CLOSING -->
+        <section class="slide" id="slide-15" data-notes="Thank you for listening. Good food deserves a second chance. Replate makes that happen.">
+            <div class="content-layer items-center text-center justify-center">
+                <h2 class="font-serif text-5xl md:text-6xl text-cream mb-12 s15-title">Good food deserves<br><span class="text-primary italic">a second chance.</span></h2>
+                
+                <div class="s15-logo mb-16 opacity-0">
+                    <h1 class="font-serif text-4xl tracking-widest text-white mb-2">REPLATE</h1>
+                    <p class="font-sans text-sm text-secondary uppercase tracking-widest">Rescue food. Reduce waste.</p>
+                </div>
+
+                <div class="glass-panel px-8 py-4 border-white/10 s15-cta opacity-0 cursor-pointer hover:bg-white/5 transition-colors">
+                    <span class="text-primary font-medium tracking-wide">THANK YOU</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prev-btn"><i data-lucide="chevron-left"></i></button>
+        <button class="nav-btn" id="next-btn"><i data-lucide="chevron-right"></i></button>
+    </div>
+
+    <!-- Speaker Notes Toggle -->
+    <button class="nav-btn" style="position: fixed; bottom: 30px; left: 30px; z-index: 50;" id="notes-btn">
+        <i data-lucide="message-square-text"></i>
+    </button>
+    <div id="speaker-notes">Speaker notes will appear here.</div>
+
+    <!-- Slide Indicator -->
+    <div style="position: fixed; top: 30px; right: 30px; z-index: 50; font-family: monospace; color: rgba(255,255,255,0.3);" id="slide-counter">
+        01 / 15
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const notesBtn = document.getElementById('notes-btn');
+        const notesPanel = document.getElementById('speaker-notes');
+        const counter = document.getElementById('slide-counter');
+        
+        let currentSlide = 0;
+        let isAnimating = false;
+        let notesVisible = false;
+
+        // Notes Toggle
+        notesBtn.addEventListener('click', () => {
+            notesVisible = !notesVisible;
+            notesPanel.style.display = notesVisible ? 'block' : 'none';
+        });
+
+        function updateUI() {
+            counter.innerText = `${String(currentSlide + 1).padStart(2, '0')} / ${slides.length}`;
+            
+            // Update Notes
+            const noteText = slides[currentSlide].getAttribute('data-notes') || "";
+            notesPanel.innerText = noteText;
+        }
+
+        // GSAP Master Timelines per slide to easily reverse/kill if needed
+        const slideAnimations = [];
+
+        function initAnimations() {
+            // S1
+            const t1 = gsap.timeline({paused: true});
+            t1.fromTo('.s1-title', { y: 40, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 1.2, ease: "expo.out" })
+              .fromTo('.s1-line', { width: 0 }, { width: '120px', duration: 0.8, ease: "power3.out" }, "-=0.6")
+              .fromTo('.s1-tagline', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, "-=0.4")
+              .fromTo('.s1-team', { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power2.out" }, "-=0.2");
+            slideAnimations[0] = t1;
+
+            // S2 (Cinematic Problem)
+            const t2 = gsap.timeline({paused: true});
+            t2.fromTo('.s2-t1', { opacity: 0, y: 20 }, { opacity: 0.5, y: 0, duration: 0.8, ease: "power2.out" })
+              .fromTo('.s2-t2', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.6")
+              .fromTo('.s2-anim-item', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, stagger: 0.2, duration: 0.8, ease: "back.out(1.2)" }, "-=0.4")
+              .fromTo('.s2-flow', { opacity: 0 }, { opacity: 1, duration: 0.5 }, "-=0.4")
+              // Story unfolds: Time passes
+              .to('.s2-clock', { innerText: "09:30 PM", duration: 0.6, delay: 0.5, snap: { innerText: 1 }, color: "#A3B8A8", backgroundColor: "rgba(163, 184, 168, 0.1)" })
+              .to('.s2-clock', { innerText: "11:00 PM", duration: 0.6, delay: 0.2, snap: { innerText: 1 }, color: "#EF4444", backgroundColor: "rgba(239, 68, 68, 0.1)" })
+              // Food expires and drops to waste
+              .to('.s2-meal-icon', { color: "#6B7280", duration: 0.4 }, "-=0.6") // Turn gray
+              .to('.s2-meal-1', { y: 50, x: 200, rotation: 45, opacity: 0, scale: 0.5, duration: 0.8, ease: "power2.in" }, "-=0.2")
+              .to('.s2-meal-2', { y: 50, x: 100, rotation: -30, opacity: 0, scale: 0.5, duration: 0.8, ease: "power2.in" }, "-=0.6")
+              .to('.s2-meal-3', { y: 50, x: 0, rotation: 60, opacity: 0, scale: 0.5, duration: 0.8, ease: "power2.in" }, "-=0.6")
+              // Bin reacts
+              .to('.s2-bin-glow', { backgroundColor: "rgba(239, 68, 68, 0.15)", duration: 0.4 }, "-=0.4")
+              .to('.s2-bin-icon', { color: "#EF4444", duration: 0.4 }, "-=0.4")
+              .to('.s2-bin-container', { borderColor: "rgba(239, 68, 68, 0.4)", scale: 1.05, yoyo: true, repeat: 1, duration: 0.2 }, "-=0.4")
+              .fromTo('.s2-subtitle', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 1, ease: "power2.out" });
+            slideAnimations[1] = t2;
+
+            // S3
+            const t3 = gsap.timeline({paused: true});
+            t3.fromTo('.s3-title', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1 })
+              .fromTo('.s3-visualization', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.8 })
+              // Reverse flow illusion
+              .fromTo('.s3-arrow-rev div', { x: 20, opacity: 0 }, { x: 0, opacity: 1, stagger: 0.1, duration: 0.5 })
+              .fromTo('.s3-replate', { scale: 0, rotation: -90 }, { scale: 1, rotation: 0, duration: 0.8, ease: "back.out(1.7)" })
+              .fromTo('.s3-arrow-fwd div', { x: -20, opacity: 0 }, { x: 0, opacity: 1, stagger: 0.1, duration: 0.5 })
+              .fromTo('.s3-customer', { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5 })
+              .fromTo('.s3-tagline', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8 }, "+=0.5");
+            slideAnimations[2] = t3;
+
+            // S4
+            const t4 = gsap.timeline({paused: true});
+            t4.fromTo('.s4-title', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8 })
+              .fromTo('.s4-text', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8 }, "-=0.6")
+              .fromTo('.s4-ui', { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 1, ease: "expo.out" }, "-=0.6")
+              // UI Interaction Demo
+              .to('.s4-strike', { width: '100%', duration: 0.4, delay: 0.6, ease: "power2.inOut" })
+              .to('.s4-old-price', { color: '#6B7280', duration: 0.2 }, "-=0.2")
+              .to('.s4-new-price', { opacity: 1, y: 0, duration: 0.6, ease: "back.out(2)" }, "-=0.1")
+              .to('.s4-discount', { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" })
+              .to('.s4-btn-fill', { y: '0%', duration: 0.4, ease: "power2.out" }, "+=0.3")
+              .to('.s4-btn span', { color: '#07110D', duration: 0.2 }, "-=0.3")
+              .to('.s4-btn', { scale: 1.05, duration: 0.15, yoyo: true, repeat: 1 });
+            slideAnimations[3] = t4;
+
+            // S5 (Live Workflow Demo)
+            const t5 = gsap.timeline({paused: true});
+            t5.fromTo('.s5-title', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" })
+              // Reveal Panels
+              .to('.s5-panel-1', { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.2)" }, "-=0.4")
+              .to('.s5-panel-2', { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.2)" }, "-=0.4")
+              .to('.s5-panel-3', { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.2)" }, "-=0.4")
+              // 1. Publish Action
+              .to('.s5-action-publish', { backgroundColor: '#B7F36B', color: '#07110D', duration: 0.3, delay: 0.5 })
+              .to('.s5-action-publish', { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 })
+              // Data travels to App
+              .to('.s5-dot-1', { opacity: 1, duration: 0.2 })
+              .to('.s5-dot-1', { x: 64, duration: 0.6, ease: "power2.inOut" })
+              .to('.s5-dot-1', { opacity: 0, duration: 0.2 })
+              // Card appears on app
+              .to('.s5-customer-card', { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, "-=0.2")
+              // 2. Reserve Action
+              .to('.s5-action-reserve', { scale: 0.9, duration: 0.1, yoyo: true, repeat: 1, delay: 0.6 })
+              .to('.s5-action-reserve', { backgroundColor: '#A3B8A8', innerText: 'Reserved', duration: 0.3 })
+              .to('.s5-qty-badge', { innerText: '4 left', duration: 0.3, backgroundColor: 'rgba(239, 68, 68, 0.2)', color: '#EF4444', borderColor: 'rgba(239, 68, 68, 0.3)' }, "-=0.3")
+              // Data travels to Dashboard
+              .to('.s5-dot-2', { opacity: 1, duration: 0.2 })
+              .to('.s5-dot-2', { x: 64, duration: 0.6, ease: "power2.inOut" })
+              .to('.s5-dot-2', { opacity: 0, duration: 0.2 })
+              // Order Appears
+              .to('.s5-order-card', { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, "-=0.2")
+              .to('.s5-status-pending', { opacity: 1, duration: 0.3 })
+              // Status changes over time
+              .to('.s5-status-pending', { opacity: 0, duration: 0.3, delay: 0.8 })
+              .to('.s5-status-confirmed', { opacity: 1, duration: 0.3 }, "-=0.3")
+              .to('.s5-status-confirmed', { opacity: 0, duration: 0.3, delay: 0.8 })
+              .to('.s5-status-ready', { opacity: 1, duration: 0.3 }, "-=0.3")
+              .to('.s5-status-ready', { opacity: 0, duration: 0.3, delay: 0.8 })
+              .to('.s5-status-completed', { opacity: 1, duration: 0.3 }, "-=0.3")
+              .to('.s5-order-card', { opacity: 0.5, duration: 0.5 }); // dims when completed
+            slideAnimations[4] = t5;
+
+            // S6
+            const t6 = gsap.timeline({paused: true});
+            t6.fromTo('.s6-title', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.8 })
+              .fromTo('.s6-phone', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: "power2.out" })
+              // Typing demo
+              .to('.s6-typing', { text: "Man", duration: 0.3, delay: 0.5 })
+              .to('.s6-typing', { text: "Mandi", duration: 0.2 })
+              .to('.s6-pill', { backgroundColor: '#B7F36B', color: '#07110D', duration: 0.3 }, "+=0.2") // Highlight filter
+              .to('.s6-result', { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" })
+              // Click reserve
+              .to('.s6-click-btn', { scale: 0.95, duration: 0.1, delay: 0.8 })
+              .to('.s6-click-btn', { scale: 1, duration: 0.1 })
+              // Show success
+              .to('.s6-success', { opacity: 1, pointerEvents: 'auto', duration: 0.4 })
+              .fromTo('.s6-check', { scale: 0 }, { scale: 1, duration: 0.5, ease: "back.out(2)" });
+            slideAnimations[5] = t6;
+
+            // S7
+            const t7 = gsap.timeline({paused: true});
+            t7.fromTo('.s7-title', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8 })
+              .fromTo('.s7-card', { opacity: 0, y: 40 }, { opacity: 1, y: 0, stagger: 0.2, duration: 0.8, ease: "power2.out" })
+              // Counters
+              .to('.s7-num-1', { innerHTML: 24, duration: 1.5, snap: { innerHTML: 1 } }, "-=0.4")
+              .to('.s7-num-2', { innerHTML: 2840, duration: 1.5, snap: { innerHTML: 1 } }, "-=1.5")
+              .to('.s7-num-3', { innerHTML: 12.4, duration: 1.5, snap: { innerHTML: 0.1 } }, "-=1.5");
+            slideAnimations[6] = t7;
+
+            // S8
+            const t8 = gsap.timeline({paused: true});
+            t8.fromTo('.s8-title', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.8 })
+              .fromTo('.s8-dashboard', { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.8 })
+              // Form interaction
+              .fromTo('.s8-input-price', { backgroundColor: 'transparent' }, { backgroundColor: 'rgba(183, 243, 107, 0.1)', duration: 0.5, delay: 1 })
+              .to('.s8-publish-btn', { backgroundColor: '#B7F36B', color: '#07110D', duration: 0.3 }, "+=0.5")
+              // Publish action
+              .to('.s8-publish-btn', { scale: 0.95, duration: 0.1 }, "+=0.2")
+              .to('.s8-publish-btn', { scale: 1, duration: 0.1 })
+              .to('.s8-form-overlay', { opacity: 1, duration: 0.3 })
+              // Move listing to live area
+              .to('.s8-listing-1', { y: 60, opacity: 0.5, duration: 0.5 }, "-=0.2")
+              .to('.s8-new-listing', { opacity: 1, y: 0, duration: 0.5 }, "-=0.3");
+            slideAnimations[7] = t8;
+
+            // S9
+            const t9 = gsap.timeline({paused: true});
+            
+            // Setup hidden states for lines
+            gsap.set(['.s9-connector', '.s9-connector2'], { strokeDasharray: 300, strokeDashoffset: 300 });
+
+            t9.fromTo('.s9-title', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.8 })
+              .fromTo('.s9-panels', { opacity: 0 }, { opacity: 1, duration: 0.2 })
+              // Reveal Customer
+              .fromTo('.s9-panel-c', { opacity: 0, x: -40, scale: 0.95 }, { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "back.out(1.2)" })
+              // Reveal Restaurant
+              .fromTo('.s9-panel-r', { opacity: 0, x: 40, scale: 0.95 }, { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "back.out(1.2)" }, "-=0.4")
+              // Reveal Admin Core
+              .fromTo('.s9-panel-a', { opacity: 0, y: 40, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "back.out(1.5)" }, "-=0.2")
+              // Connect them visually with lines
+              .to('.s9-connector', { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, "-=0.2")
+              .to('.s9-connector2', { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, "-=0.8")
+              // Subtle continuous pulse on the core
+              .to('.s9-panel-a', { boxShadow: '0 0 50px rgba(183, 243, 107, 0.4)', duration: 1.5, yoyo: true, repeat: -1 }, "+=0.2");
+            slideAnimations[8] = t9;
+
+            // S10 (Cinematic Architecture)
+            const t10 = gsap.timeline({paused: true});
+            t10.fromTo('.s10-title', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.8 })
+               .fromTo('.s10-node', { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.3, duration: 0.8, ease: "expo.out" })
+               // Data flow animation looping
+               .to('.s10-packet', { opacity: 1, top: '45%', duration: 1.2, ease: "power1.inOut", repeat: -1, repeatDelay: 0.5 }, 1)
+               .to('.s10-server-pulse', { opacity: 0.8, duration: 0.3, yoyo: true, repeat: -1, repeatDelay: 1.4 }, 1.5)
+               .to('.s10-packet-2', { opacity: 1, top: '85%', duration: 1.2, ease: "power1.inOut", repeat: -1, repeatDelay: 0.5 }, 1.7)
+               .fromTo('.s10-caption', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 1 }, 2);
+            slideAnimations[9] = t10;
+
+            // S11 (Database Drawing Lines)
+            const t11 = gsap.timeline({paused: true});
+            
+            // Set initial dash offset to hide lines
+            gsap.set('.s11-path', { strokeDasharray: 400, strokeDashoffset: 400 });
+
+            t11.fromTo('.s11-title', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.8 })
+               .fromTo('.s11-table', { opacity: 0, scale: 0.9, filter: 'blur(10px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', stagger: 0.2, duration: 0.8, ease: "power3.out" })
+               // Draw relationship lines
+               .to('#db-line-1', { strokeDashoffset: 0, duration: 1, ease: "power2.inOut" }, "-=0.2")
+               .to('.s11-link-u', { borderColor: '#B7F36B', backgroundColor: 'rgba(183, 243, 107, 0.15)', duration: 0.3 }, "-=0.2")
+               
+               .to('#db-line-2', { strokeDashoffset: 0, duration: 1, ease: "power2.inOut" }, "-=0.2")
+               .to('.s11-link-f', { borderColor: '#B7F36B', backgroundColor: 'rgba(183, 243, 107, 0.15)', duration: 0.3 }, "-=0.2");
+            slideAnimations[10] = t11;
+
+            // S12
+            const t12 = gsap.timeline({paused: true});
+            t12.fromTo('.s12-title', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.8 })
+               .fromTo('.s12-layer', { opacity: 0, y: 40 }, { opacity: 1, y: 0, stagger: -0.2, duration: 0.6, ease: "power2.out" }); // Stagger negative to build from bottom
+            slideAnimations[11] = t12;
+
+            // S13 (Impact Wow Moment)
+            const t13 = gsap.timeline({paused: true});
+            t13.fromTo('.s13-title', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 1 })
+               .to('#s13-counter', { 
+                   innerHTML: 12840, 
+                   duration: 3, 
+                   ease: "power2.out", 
+                   snap: { innerHTML: 1 },
+                   onUpdate: function() {
+                       document.getElementById('s13-counter').innerText = Math.round(this.targets()[0].innerHTML).toLocaleString();
+                   }
+               })
+               .to('.s13-glow', { opacity: 1, duration: 2 }, "-=2") // Glow intensifies as number grows
+               .to('.s13-benefits', { opacity: 1, y: -20, duration: 1 }, "-=0.5");
+            slideAnimations[12] = t13;
+
+            // S14
+            const t14 = gsap.timeline({paused: true});
+            t14.fromTo('.s14-title', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8 })
+               .fromTo('.s14-line', { height: 0 }, { height: '100%', duration: 1.5, ease: "power1.inOut" })
+               .fromTo('.s14-item', { opacity: 0, x: -20 }, { opacity: 1, x: 0, stagger: 0.3, duration: 0.5 }, "-=1"); // Reveal phases
+            slideAnimations[13] = t14;
+
+            // S15 (Cinematic Closing)
+            const t15 = gsap.timeline({paused: true});
+            t15.fromTo('.s15-title', { opacity: 0, filter: 'blur(20px)', scale: 1.1 }, { opacity: 1, filter: 'blur(0px)', scale: 1, duration: 1.8, ease: "power3.out" })
+               .fromTo('.s15-logo', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" }, "+=0.2")
+               .fromTo('.s15-cta', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.5)" }, "+=0.3");
+            slideAnimations[14] = t15;
+
+            // Globally increase animation speed by 35% for a snappier feel
+            gsap.globalTimeline.timeScale(1.35);
+        }
+
+        // Setup TextPlugin equivalent for GSAP manually since we don't have the premium plugin loaded
+        // Simple text replacer for Scene 6
+        gsap.registerEffect({
+            name: "text",
+            effect: (targets, config) => {
+                let tl = gsap.timeline();
+                tl.to(targets, {duration: config.duration, onUpdate: function() {
+                    let prog = this.progress();
+                    let chars = Math.floor(prog * config.text.length);
+                    targets[0].innerText = config.text.substring(0, chars);
+                }});
+                return tl;
+            },
+            extendTimeline: true,
+        });
+
+        function goToSlide(index) {
+            if (isAnimating || index < 0 || index >= slides.length || index === currentSlide) return;
+            isAnimating = true;
+
+            const current = slides[currentSlide];
+            const next = slides[index];
+
+            // Direction for simple slide/fade
+            const dir = index > currentSlide ? 1 : -1;
+
+            // Stop current animation
+            if(slideAnimations[currentSlide]) {
+                slideAnimations[currentSlide].pause(0); // Reset to beginning
+            }
+
+            // Cinematic Transition Out
+            gsap.to(current, {
+                opacity: 0,
+                scale: 0.95,
+                duration: 0.4,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    current.classList.remove('active');
+                    current.style.pointerEvents = 'none';
+                    current.style.visibility = 'hidden';
+                }
+            });
+
+            // Cinematic Transition In
+            next.classList.add('active');
+            next.style.visibility = 'visible';
+            gsap.fromTo(next, 
+                { opacity: 0, scale: 1.05 },
+                { 
+                    opacity: 1, 
+                    scale: 1,
+                    duration: 0.5, 
+                    ease: "power2.out",
+                    onComplete: () => {
+                        next.style.pointerEvents = 'auto';
+                        isAnimating = false;
+                        // Play specific slide animation
+                        if(slideAnimations[index]) {
+                            slideAnimations[index].restart();
+                        }
+                    }
+                }
+            );
+
+            currentSlide = index;
+            updateUI();
+        }
+
+        // Event Listeners
+        nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+        prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') {
+                goToSlide(currentSlide + 1);
+            } else if (e.key === 'ArrowLeft') {
+                goToSlide(currentSlide - 1);
+            }
+        });
+
+        // Initialize
+        initAnimations();
+        updateUI();
+        
+        // Ensure first slide is visible immediately
+        gsap.set(slides[0], {opacity: 1, scale: 1});
+        // Play first animation slightly delayed for initial load effect
+        setTimeout(() => {
+            if(slideAnimations[0]) slideAnimations[0].play();
+        }, 500);
+
+    </script>
+</body>
+</html>
