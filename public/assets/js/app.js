@@ -136,11 +136,12 @@ const App = (function () {
             <div class="user-avatar-sm" style="width: 42px; height: 42px; font-size: 1.1rem;">${escapeHtml(initial)}</div>
             <div>
               <div style="font-weight: 700; color: var(--cream); font-size: 1rem;" id="mobile-user-name">${escapeHtml(user.name || 'Anvin')}</div>
-              <div style="font-size: 0.72rem; color: var(--accent-lime); font-weight: 600;">Customer • Kerala Rescuer 🌴</div>
+              <div style="font-size: 0.72rem; color: var(--accent-lime); font-weight: 600;">Customer • Verified Rescuer</div>
             </div>
           </div>
-          <button class="btn btn-outline-lime btn-sm" onclick="App.editUsername(); App.closeMobileMenu();" style="padding: 4px 10px; font-size: 0.75rem; border-radius: var(--radius-full);">
-            ✏️ Edit Name
+          <button class="btn btn-outline-lime btn-sm" onclick="App.editUsername(); App.closeMobileMenu();" style="padding: 4px 10px; font-size: 0.75rem; border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 4px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+            Edit Name
           </button>
         `;
       }
@@ -262,7 +263,9 @@ const App = (function () {
               <div class="hero-glow-ring"></div>
               
               <div class="hero-floating-pill pill-left">
-                <div class="pill-icon">🌴</div>
+                <div class="pill-icon" style="display: flex; align-items: center; justify-content: center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+                </div>
                 <div class="pill-content">
                   <div class="pill-title">Zero Waste Kerala</div>
                   <div class="pill-desc">4.8 Tonnes Diverted</div>
@@ -299,7 +302,9 @@ const App = (function () {
               </div>
 
               <div class="hero-floating-pill pill-right">
-                <div class="pill-icon">⚡</div>
+                <div class="pill-icon" style="display: flex; align-items: center; justify-content: center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                </div>
                 <div class="pill-content">
                   <div class="pill-title">6 Boxes Left</div>
                   <div class="pill-desc">1.4 km Away</div>
@@ -573,28 +578,36 @@ const App = (function () {
           <!-- DYNAMIC STATS - GUARANTEED NON-ZERO -->
           <div class="impact-cards-grid" style="margin-bottom: 40px;">
             <div class="impact-kpi-card">
-              <div class="kpi-icon">🍱</div>
+              <div class="kpi-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              </div>
               <div class="kpi-number">${mealsCount}</div>
               <div class="kpi-label">Meals Rescued</div>
               <div class="kpi-subtext">Active rescued food portions</div>
             </div>
 
             <div class="impact-kpi-card">
-              <div class="kpi-icon">💰</div>
+              <div class="kpi-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
               <div class="kpi-number">₹${Math.round(totalSavedInr)}</div>
               <div class="kpi-label">Total Amount Saved</div>
               <div class="kpi-subtext">Saved from original menu prices</div>
             </div>
 
             <div class="impact-kpi-card">
-              <div class="kpi-icon">🌴</div>
+              <div class="kpi-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+              </div>
               <div class="kpi-number">${kgSaved} kg</div>
               <div class="kpi-label">Food Waste Prevented</div>
               <div class="kpi-subtext">Diverted from waste in Kerala</div>
             </div>
 
             <div class="impact-kpi-card">
-              <div class="kpi-icon">🛡️</div>
+              <div class="kpi-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+              </div>
               <div class="kpi-number">${co2Saved} kg</div>
               <div class="kpi-label">CO₂ Emissions Offset</div>
               <div class="kpi-subtext">Environmental carbon reduction</div>
@@ -681,191 +694,228 @@ const App = (function () {
     }
   }
 
+  // --- Helper: Build queue row HTML ---
+  function buildQueueRow(order) {
+    var code = escapeHtml(order.reservation_code);
+    var name = escapeHtml(order.customer_name);
+    var phone = escapeHtml(order.customer_phone || '');
+    var food = escapeHtml(order.food_name);
+    var statusText = escapeHtml(order.status.replace('_', ' '));
+    var actionHtml = '<span style="color: var(--accent-lime); font-size: 0.8rem; font-weight: 700;">✓ Completed</span>';
+    if (order.status === 'confirmed') {
+      actionHtml = '<button class="btn btn-primary btn-sm" onclick="App.updateOrderStatus(' + order.id + ', \'ready_for_pickup\')">Mark Ready</button>';
+    } else if (order.status === 'ready_for_pickup') {
+      actionHtml = '<button class="btn btn-outline-lime btn-sm" onclick="App.updateOrderStatus(' + order.id + ', \'completed\')">Complete Pickup</button>';
+    }
+    return '<tr>' +
+      '<td><span style="font-family: var(--font-display); font-weight: 800; color: var(--accent-lime);">' + code + '</span></td>' +
+      '<td><strong>' + name + '</strong><div style="font-size: 0.75rem; color: var(--text-muted);">' + phone + '</div></td>' +
+      '<td>' + food + '</td>' +
+      '<td>' + order.quantity + '</td>' +
+      '<td>₹' + Number(order.total_price).toFixed(0) + '</td>' +
+      '<td><span class="status-pill ' + order.status + '">' + statusText + '</span></td>' +
+      '<td>' + actionHtml + '</td>' +
+    '</tr>';
+  }
+
+  // --- Helper: Build inventory row HTML ---
+  function buildInventoryRow(food) {
+    var catName = (state.categories.find(function(c) { return c.id === food.category_id; }) || {}).name || 'General';
+    var stockColor = food.quantity <= 3 ? '#EF4444' : 'var(--cream)';
+    return '<tr>' +
+      '<td><strong>' + escapeHtml(food.name) + '</strong><div style="font-size: 0.72rem; color: var(--text-muted);">' + escapeHtml(food.dietary) + '</div></td>' +
+      '<td>' + escapeHtml(catName) + '</td>' +
+      '<td>₹' + Number(food.original_price).toFixed(0) + '</td>' +
+      '<td style="color: var(--accent-lime); font-weight: 700;">₹' + Number(food.rescue_price).toFixed(0) + '</td>' +
+      '<td><span class="discount-badge" style="font-size: 0.72rem; padding: 2px 8px;">' + food.discount_percent + '% OFF</span></td>' +
+      '<td><span style="color: ' + stockColor + '; font-weight: 700;">' + food.quantity + '</span></td>' +
+      '<td>' + escapeHtml(food.pickup_start) + ' – ' + escapeHtml(food.pickup_end) + '</td>' +
+      '<td><span class="status-pill active">Live</span></td>' +
+    '</tr>';
+  }
+
+  // --- Helper: Build admin restaurant row ---
+  function buildAdminRestaurantRow(r) {
+    return '<tr>' +
+      '<td><strong>' + escapeHtml(r.name) + '</strong></td>' +
+      '<td>' + escapeHtml(r.cuisine) + '</td>' +
+      '<td>' + escapeHtml(r.city) + '</td>' +
+      '<td>★ ' + r.rating + '</td>' +
+      '<td>' + (r.meals_saved_count || 0) + '</td>' +
+      '<td><span class="status-pill active">Verified</span></td>' +
+    '</tr>';
+  }
+
+  // --- Helper: Build admin user row ---
+  function buildAdminUserRow(u) {
+    var roleClass = u.role === 'admin' ? 'ready_for_pickup' : (u.role === 'restaurant' ? 'confirmed' : 'active');
+    return '<tr>' +
+      '<td><strong>' + escapeHtml(u.name) + '</strong></td>' +
+      '<td>' + escapeHtml(u.email) + '</td>' +
+      '<td>' + escapeHtml(u.phone || 'N/A') + '</td>' +
+      '<td><span class="status-pill ' + roleClass + '">' + escapeHtml(u.role) + '</span></td>' +
+      '<td><span class="status-pill active">Active</span></td>' +
+    '</tr>';
+  }
+
+  // --- Helper: Build admin order row ---
+  function buildAdminOrderRow(o) {
+    var statusText = escapeHtml(o.status.replace('_', ' '));
+    return '<tr>' +
+      '<td><span style="font-family: var(--font-display); font-weight: 800; color: var(--accent-lime);">' + escapeHtml(o.reservation_code) + '</span></td>' +
+      '<td>' + escapeHtml(o.customer_name) + '</td>' +
+      '<td>' + escapeHtml(o.food_name) + '</td>' +
+      '<td>' + escapeHtml(o.restaurant_name) + '</td>' +
+      '<td>' + o.quantity + '</td>' +
+      '<td>₹' + Number(o.total_price).toFixed(0) + '</td>' +
+      '<td><span class="status-pill ' + o.status + '">' + statusText + '</span></td>' +
+    '</tr>';
+  }
+
+  // --- Helper: Build activity log row ---
+  function buildLogRow(log) {
+    return '<tr>' +
+      '<td style="white-space: nowrap; color: var(--accent-lime); font-weight: 600;">' + escapeHtml(log.time) + '</td>' +
+      '<td><strong>' + escapeHtml(log.event) + '</strong></td>' +
+      '<td style="color: var(--text-muted);">' + escapeHtml(log.detail) + '</td>' +
+    '</tr>';
+  }
+
   // --- 4. RESTAURANT PORTAL ---
   async function renderRestaurantPortalView(container) {
-    const [dashRes, queueRes] = await Promise.all([
+    var dashQueueResults = await Promise.all([
       API.restaurantDashboard(),
       API.restaurantReservations(1)
     ]);
+    var dashRes = dashQueueResults[0];
+    var queueRes = dashQueueResults[1];
 
-    const rest = dashRes.restaurant || { name: 'Mandi Manzil', cuisine: 'Arabian & Malabar Mandi Specialist' };
-    const metrics = dashRes.metrics || {
+    var rest = dashRes.restaurant || { name: 'Mandi Manzil', cuisine: 'Arabian & Malabar Mandi Specialist' };
+    var metrics = dashRes.metrics || {
       meals_rescued: 1980,
       revenue_recovered: 154200,
       pending_pickups: 2,
       active_listings: state.foods.length
     };
-    const listings = dashRes.listings || state.foods;
-    const queue = queueRes.reservations || [];
+    var listings = dashRes.listings || state.foods;
+    var queue = queueRes.reservations || [];
 
-    container.innerHTML = `
-      <section class="dashboard-section">
-        <div class="container">
-          <div class="dashboard-hero-header">
-            <div class="dash-user-info">
-              <span class="section-tag">Commercial Kitchen Portal</span>
-              <h2>${escapeHtml(rest.name)}</h2>
-              <p>${escapeHtml(rest.cuisine)} • Location: <strong>Kochi, Kerala</strong> • Rating: <strong>★ 4.9</strong></p>
-            </div>
-            <button class="btn btn-primary" id="open-add-food-btn">
-              + Post New Surplus Drop
-            </button>
-          </div>
+    var queueRows = queue.length > 0
+      ? queue.map(buildQueueRow).join('')
+      : '<tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">No pickup orders yet. Customer orders will appear here when they reserve your surplus food.</td></tr>';
 
-          <div class="impact-cards-grid" style="margin-bottom: 40px;">
-            <div class="impact-kpi-card">
-              <div class="kpi-icon">📦</div>
-              <div class="kpi-number">${metrics.meals_rescued}</div>
-              <div class="kpi-label">Meals Rescued</div>
-            </div>
+    var inventoryRows = listings.map(buildInventoryRow).join('');
 
-            <div class="impact-kpi-card">
-              <div class="kpi-icon">💵</div>
-              <div class="kpi-number">₹${metrics.revenue_recovered}</div>
-              <div class="kpi-label">Revenue Recovered</div>
-            </div>
+    container.innerHTML = ''
+      + '<section class="dashboard-section">'
+      + '<div class="container">'
+      + '<div class="dashboard-hero-header">'
+      + '  <div class="dash-user-info">'
+      + '    <span class="section-tag">Commercial Kitchen Portal</span>'
+      + '    <h2>' + escapeHtml(rest.name) + '</h2>'
+      + '    <p>' + escapeHtml(rest.cuisine) + ' • Location: <strong>Kochi, Kerala</strong> • Rating: <strong>★ 4.9</strong></p>'
+      + '  </div>'
+      + '  <button class="btn btn-primary" id="open-add-food-btn">+ Post New Surplus Drop</button>'
+      + '</div>'
 
-            <div class="impact-kpi-card">
-              <div class="kpi-icon">⏳</div>
-              <div class="kpi-number">${metrics.pending_pickups}</div>
-              <div class="kpi-label">Pending Pickups</div>
-            </div>
+      + '<div class="impact-cards-grid" style="margin-bottom: 40px;">'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div><div class="kpi-number">' + metrics.meals_rescued + '</div><div class="kpi-label">Meals Rescued</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="kpi-number">₹' + metrics.revenue_recovered + '</div><div class="kpi-label">Revenue Recovered</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="kpi-number">' + metrics.pending_pickups + '</div><div class="kpi-label">Pending Pickups</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div><div class="kpi-number">' + metrics.active_listings + '</div><div class="kpi-label">Active Surplus Drops</div></div>'
+      + '</div>'
 
-            <div class="impact-kpi-card">
-              <div class="kpi-icon">🍛</div>
-              <div class="kpi-number">${metrics.active_listings}</div>
-              <div class="kpi-label">Active Surplus Drops</div>
-            </div>
-          </div>
+      + '<div style="margin-bottom: 50px;">'
+      + '  <h3 style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--cream); margin-bottom: 16px;">Live Customer Pickup Queue</h3>'
+      + '  <div class="data-table-wrap"><table class="data-table">'
+      + '    <thead><tr><th>Verification Code</th><th>Customer</th><th>Dish</th><th>Qty</th><th>Price</th><th>Status</th><th>Action</th></tr></thead>'
+      + '    <tbody>' + queueRows + '</tbody>'
+      + '  </table></div>'
+      + '</div>'
 
-          <!-- Pickup Queue -->
-          <div style="margin-bottom: 50px;">
-            <h3 style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--cream); margin-bottom: 16px;">Live Customer Pickup Queue</h3>
-            <div class="data-table-wrap">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Verification Code</th>
-                    <th>Customer</th>
-                    <th>Dish</th>
-                    <th>Qty</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${queue.map((order) => `
-                    <tr>
-                      <td>
-                        <span style="font-family: var(--font-display); font-weight: 800; color: var(--accent-lime);">${escapeHtml(order.reservation_code)}</span>
-                      </td>
-                      <td>
-                        <strong>${escapeHtml(order.customer_name)}</strong>
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">${escapeHtml(order.customer_phone || '')}</div>
-                      </td>
-                      <td>${escapeHtml(order.food_name)}</td>
-                      <td>${order.quantity}</td>
-                      <td>₹${Number(order.total_price).toFixed(0)}</td>
-                      <td><span class="status-pill ${order.status}">${escapeHtml(order.status.replace('_', ' '))}</span></td>
-                      <td>
-                        ${order.status === 'confirmed' ? `
-                          <button class="btn btn-primary btn-sm" onclick="App.updateOrderStatus(${order.id}, 'ready_for_pickup')">Mark Ready</button>
-                        ` : (order.status === 'ready_for_pickup' ? `
-                          <button class="btn btn-outline-lime btn-sm" onclick="App.updateOrderStatus(${order.id}, 'completed')">Complete Pickup</button>
-                        ` : `
-                          <span style="color: var(--accent-lime); font-size: 0.8rem; font-weight: 700;">✓ Completed</span>
-                        `)}
-                      </td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-    `;
+      + '<div style="margin-bottom: 50px;">'
+      + '  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">'
+      + '    <h3 style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--cream);">Active Surplus Inventory (' + listings.length + ')</h3>'
+      + '    <span style="font-size: 0.82rem; color: var(--text-muted);">Manage your published surplus food drops</span>'
+      + '  </div>'
+      + '  <div class="data-table-wrap"><table class="data-table">'
+      + '    <thead><tr><th>Dish</th><th>Category</th><th>Original</th><th>Rescue Price</th><th>Discount</th><th>Stock Left</th><th>Pickup Window</th><th>Status</th></tr></thead>'
+      + '    <tbody>' + inventoryRows + '</tbody>'
+      + '  </table></div>'
+      + '</div>'
+
+      + '</div></section>';
 
     document.getElementById('open-add-food-btn')?.addEventListener('click', openAddFoodModal);
   }
 
   // --- 5. ADMIN PANEL ---
   async function renderAdminPanelView(container) {
-    const adminRes = await API.adminDashboard();
-    const metrics = adminRes.metrics || {};
-    const restaurants = adminRes.restaurants || state.restaurants;
-    const logs = adminRes.logs || [];
+    var adminRes = await API.adminDashboard();
+    var metrics = adminRes.metrics || {};
+    var restaurants = adminRes.restaurants || state.restaurants;
+    var users = adminRes.users || [];
+    var orders = adminRes.orders || [];
+    var logs = adminRes.logs || [];
 
-    container.innerHTML = `
-      <section class="dashboard-section">
-        <div class="container">
-          <div class="dashboard-hero-header">
-            <div class="dash-user-info">
-              <span class="section-tag">System Administration</span>
-              <h2>Kerala Platform Oversight Hub</h2>
-              <p>System Status: <strong>Operational (100%)</strong> • Hub: <strong>Kochi & Calicut</strong></p>
-            </div>
-          </div>
+    var restaurantRows = restaurants.map(buildAdminRestaurantRow).join('');
+    var userRows = users.map(buildAdminUserRow).join('');
+    var orderRows = orders.length > 0
+      ? orders.map(buildAdminOrderRow).join('')
+      : '<tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">No orders placed yet.</td></tr>';
+    var logRows = logs.map(buildLogRow).join('');
 
-          <div class="impact-cards-grid" style="margin-bottom: 40px;">
-            <div class="impact-kpi-card">
-              <div class="kpi-icon">👥</div>
-              <div class="kpi-number">${metrics.total_users || 4}</div>
-              <div class="kpi-label">Registered Users</div>
-            </div>
+    container.innerHTML = ''
+      + '<section class="dashboard-section">'
+      + '<div class="container">'
+      + '<div class="dashboard-hero-header">'
+      + '  <div class="dash-user-info">'
+      + '    <span class="section-tag">System Administration</span>'
+      + '    <h2>Kerala Platform Oversight Hub</h2>'
+      + '    <p>System Status: <strong style="color: var(--accent-lime);">● Operational (100%)</strong> • Hub: <strong>Kochi &amp; Calicut</strong></p>'
+      + '  </div>'
+      + '</div>'
 
-            <div class="impact-kpi-card">
-              <div class="kpi-icon">🏬</div>
-              <div class="kpi-number">${metrics.total_restaurants || 6}</div>
-              <div class="kpi-label">Partner Kitchens</div>
-            </div>
+      + '<div class="impact-cards-grid" style="margin-bottom: 40px;">'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="kpi-number">' + (metrics.total_users || 4) + '</div><div class="kpi-label">Registered Users</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="kpi-number">' + (metrics.total_restaurants || 6) + '</div><div class="kpi-label">Partner Kitchens</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div><div class="kpi-number">' + (metrics.meals_rescued || 15420) + '</div><div class="kpi-label">Total Rescued Meals</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="kpi-number">₹' + ((metrics.money_saved_inr || 3420800) / 100000).toFixed(1) + 'L</div><div class="kpi-label">Total Value Recovered</div></div>'
+      + '</div>'
 
-            <div class="impact-kpi-card">
-              <div class="kpi-icon">🍛</div>
-              <div class="kpi-number">${metrics.meals_rescued || 15420}</div>
-              <div class="kpi-label">Total Rescued Meals</div>
-            </div>
+      + '<div style="margin-bottom: 50px;">'
+      + '  <h3 style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--cream); margin-bottom: 16px;">Platform Users (' + (users.length || 4) + ')</h3>'
+      + '  <div class="data-table-wrap"><table class="data-table">'
+      + '    <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Status</th></tr></thead>'
+      + '    <tbody>' + userRows + '</tbody>'
+      + '  </table></div>'
+      + '</div>'
 
-            <div class="impact-kpi-card">
-              <div class="kpi-icon">💰</div>
-              <div class="kpi-number">₹${((metrics.money_saved_inr || 3420800) / 100000).toFixed(1)}L</div>
-              <div class="kpi-label">Total Value Recovered</div>
-            </div>
-          </div>
+      + '<div style="margin-bottom: 50px;">'
+      + '  <h3 style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--cream); margin-bottom: 16px;">Partner Restaurants Directory</h3>'
+      + '  <div class="data-table-wrap"><table class="data-table">'
+      + '    <thead><tr><th>Restaurant</th><th>Cuisine</th><th>City</th><th>Rating</th><th>Meals Saved</th><th>Status</th></tr></thead>'
+      + '    <tbody>' + restaurantRows + '</tbody>'
+      + '  </table></div>'
+      + '</div>'
 
-          <div style="margin-bottom: 50px;">
-            <h3 style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--cream); margin-bottom: 16px;">Partner Restaurants Directory</h3>
-            <div class="data-table-wrap">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Restaurant</th>
-                    <th>Cuisine</th>
-                    <th>City</th>
-                    <th>Rating</th>
-                    <th>Meals Saved</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${restaurants.map((r) => `
-                    <tr>
-                      <td><strong>${escapeHtml(r.name)}</strong></td>
-                      <td>${escapeHtml(r.cuisine)}</td>
-                      <td>${escapeHtml(r.city)}</td>
-                      <td>★ ${r.rating}</td>
-                      <td>${r.meals_saved_count}</td>
-                      <td><span class="status-pill active">Verified</span></td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-    `;
+      + '<div style="margin-bottom: 50px;">'
+      + '  <h3 style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--cream); margin-bottom: 16px;">All Platform Orders (' + orders.length + ')</h3>'
+      + '  <div class="data-table-wrap"><table class="data-table">'
+      + '    <thead><tr><th>Code</th><th>Customer</th><th>Dish</th><th>Restaurant</th><th>Qty</th><th>Total</th><th>Status</th></tr></thead>'
+      + '    <tbody>' + orderRows + '</tbody>'
+      + '  </table></div>'
+      + '</div>'
+
+      + '<div style="margin-bottom: 50px;">'
+      + '  <h3 style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--cream); margin-bottom: 16px;">Recent Activity Log</h3>'
+      + '  <div class="data-table-wrap"><table class="data-table">'
+      + '    <thead><tr><th>Time</th><th>Event</th><th>Details</th></tr></thead>'
+      + '    <tbody>' + logRows + '</tbody>'
+      + '  </table></div>'
+      + '</div>'
+
+      + '</div></section>';
   }
 
   // --- 6. FOOD CARD TEMPLATE ---
@@ -1363,23 +1413,77 @@ const App = (function () {
     navigateTo('discover');
   }
 
-  async function editUsername() {
+  function editUsername() {
     const currentName = state.currentUser?.name || 'Anvin';
-    const newName = window.prompt('Enter your username:', currentName);
-    if (!newName) return;
-    const trimmed = newName.trim();
-    if (!trimmed || trimmed === currentName) return;
-
-    state.currentUser.name = trimmed;
-    localStorage.setItem('replate_user_name', trimmed);
-    try {
-      await API.updateProfile({ name: trimmed });
-    } catch (e) {
-      console.warn('Profile sync:', e);
+    
+    let modal = document.getElementById('edit-username-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'edit-username-modal';
+      modal.className = 'modal-backdrop';
+      document.body.appendChild(modal);
     }
-    updateNavAuthUI();
-    renderCurrentView();
-    showToast(`Username updated to "${trimmed}"! 🌴`);
+    
+    modal.innerHTML = `
+      <div class="modal-sheet" style="max-width: 400px; padding: 0;">
+        <button class="modal-close-btn" onclick="App.closeModal('edit-username-modal')">✕</button>
+        <div class="modal-content-body" style="padding: 24px; text-align: left;">
+          <h3 style="font-size: 1.5rem; color: var(--cream); margin-bottom: 16px; font-family: var(--font-serif);">Edit Profile</h3>
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Username</label>
+            <input type="text" id="edit-username-input" class="form-control" style="width: 100%; padding: 10px 14px; font-size: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-surface); color: var(--text-main);" value="${escapeHtml(currentName)}">
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 12px;">
+            <button class="btn btn-secondary" onclick="App.closeModal('edit-username-modal')">Cancel</button>
+            <button class="btn btn-primary" id="save-username-btn">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Add active class for animation after a tiny delay
+    requestAnimationFrame(() => {
+      modal.classList.add('active');
+      const input = document.getElementById('edit-username-input');
+      input.focus();
+      // Move cursor to end of input
+      input.setSelectionRange(input.value.length, input.value.length);
+    });
+
+    // Handle Save
+    document.getElementById('save-username-btn').addEventListener('click', async () => {
+      const newName = document.getElementById('edit-username-input').value;
+      if (!newName) return;
+      const trimmed = newName.trim();
+      if (!trimmed || trimmed === currentName) {
+        App.closeModal('edit-username-modal');
+        return;
+      }
+
+      const saveBtn = document.getElementById('save-username-btn');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = 'Saving...';
+
+      state.currentUser.name = trimmed;
+      localStorage.setItem('replate_user_name', trimmed);
+      try {
+        await API.updateProfile({ name: trimmed });
+      } catch (e) {
+        console.warn('Profile sync:', e);
+      }
+      
+      updateNavAuthUI();
+      renderCurrentView();
+      showToast(`Username updated to "${trimmed}"! 🌴`);
+      App.closeModal('edit-username-modal');
+    });
+
+    // Handle Enter key
+    document.getElementById('edit-username-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('save-username-btn').click();
+      }
+    });
   }
 
   function escapeHtml(str) {

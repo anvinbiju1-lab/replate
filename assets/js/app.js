@@ -136,11 +136,12 @@ const App = (function () {
             <div class="user-avatar-sm" style="width: 42px; height: 42px; font-size: 1.1rem;">${escapeHtml(initial)}</div>
             <div>
               <div style="font-weight: 700; color: var(--cream); font-size: 1rem;" id="mobile-user-name">${escapeHtml(user.name || 'Anvin')}</div>
-              <div style="font-size: 0.72rem; color: var(--accent-lime); font-weight: 600;">Customer • Kerala Rescuer 🌴</div>
+              <div style="font-size: 0.72rem; color: var(--accent-lime); font-weight: 600;">Customer • Verified Rescuer</div>
             </div>
           </div>
-          <button class="btn btn-outline-lime btn-sm" onclick="App.editUsername(); App.closeMobileMenu();" style="padding: 4px 10px; font-size: 0.75rem; border-radius: var(--radius-full);">
-            ✏️ Edit Name
+          <button class="btn btn-outline-lime btn-sm" onclick="App.editUsername(); App.closeMobileMenu();" style="padding: 4px 10px; font-size: 0.75rem; border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 4px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+            Edit Name
           </button>
         `;
       }
@@ -262,7 +263,9 @@ const App = (function () {
               <div class="hero-glow-ring"></div>
               
               <div class="hero-floating-pill pill-left">
-                <div class="pill-icon">🌴</div>
+                <div class="pill-icon" style="display: flex; align-items: center; justify-content: center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+                </div>
                 <div class="pill-content">
                   <div class="pill-title">Zero Waste Kerala</div>
                   <div class="pill-desc">4.8 Tonnes Diverted</div>
@@ -299,7 +302,9 @@ const App = (function () {
               </div>
 
               <div class="hero-floating-pill pill-right">
-                <div class="pill-icon">⚡</div>
+                <div class="pill-icon" style="display: flex; align-items: center; justify-content: center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                </div>
                 <div class="pill-content">
                   <div class="pill-title">6 Boxes Left</div>
                   <div class="pill-desc">1.4 km Away</div>
@@ -573,28 +578,36 @@ const App = (function () {
           <!-- DYNAMIC STATS - GUARANTEED NON-ZERO -->
           <div class="impact-cards-grid" style="margin-bottom: 40px;">
             <div class="impact-kpi-card">
-              <div class="kpi-icon">🍱</div>
+              <div class="kpi-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              </div>
               <div class="kpi-number">${mealsCount}</div>
               <div class="kpi-label">Meals Rescued</div>
               <div class="kpi-subtext">Active rescued food portions</div>
             </div>
 
             <div class="impact-kpi-card">
-              <div class="kpi-icon">💰</div>
+              <div class="kpi-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
               <div class="kpi-number">₹${Math.round(totalSavedInr)}</div>
               <div class="kpi-label">Total Amount Saved</div>
               <div class="kpi-subtext">Saved from original menu prices</div>
             </div>
 
             <div class="impact-kpi-card">
-              <div class="kpi-icon">🌴</div>
+              <div class="kpi-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+              </div>
               <div class="kpi-number">${kgSaved} kg</div>
               <div class="kpi-label">Food Waste Prevented</div>
               <div class="kpi-subtext">Diverted from waste in Kerala</div>
             </div>
 
             <div class="impact-kpi-card">
-              <div class="kpi-icon">🛡️</div>
+              <div class="kpi-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+              </div>
               <div class="kpi-number">${co2Saved} kg</div>
               <div class="kpi-label">CO₂ Emissions Offset</div>
               <div class="kpi-subtext">Environmental carbon reduction</div>
@@ -806,10 +819,10 @@ const App = (function () {
       + '</div>'
 
       + '<div class="impact-cards-grid" style="margin-bottom: 40px;">'
-      + '  <div class="impact-kpi-card"><div class="kpi-icon">📦</div><div class="kpi-number">' + metrics.meals_rescued + '</div><div class="kpi-label">Meals Rescued</div></div>'
-      + '  <div class="impact-kpi-card"><div class="kpi-icon">💵</div><div class="kpi-number">₹' + metrics.revenue_recovered + '</div><div class="kpi-label">Revenue Recovered</div></div>'
-      + '  <div class="impact-kpi-card"><div class="kpi-icon">⏳</div><div class="kpi-number">' + metrics.pending_pickups + '</div><div class="kpi-label">Pending Pickups</div></div>'
-      + '  <div class="impact-kpi-card"><div class="kpi-icon">🍛</div><div class="kpi-number">' + metrics.active_listings + '</div><div class="kpi-label">Active Surplus Drops</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div><div class="kpi-number">' + metrics.meals_rescued + '</div><div class="kpi-label">Meals Rescued</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="kpi-number">₹' + metrics.revenue_recovered + '</div><div class="kpi-label">Revenue Recovered</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="kpi-number">' + metrics.pending_pickups + '</div><div class="kpi-label">Pending Pickups</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div><div class="kpi-number">' + metrics.active_listings + '</div><div class="kpi-label">Active Surplus Drops</div></div>'
       + '</div>'
 
       + '<div style="margin-bottom: 50px;">'
@@ -864,10 +877,10 @@ const App = (function () {
       + '</div>'
 
       + '<div class="impact-cards-grid" style="margin-bottom: 40px;">'
-      + '  <div class="impact-kpi-card"><div class="kpi-icon">👥</div><div class="kpi-number">' + (metrics.total_users || 4) + '</div><div class="kpi-label">Registered Users</div></div>'
-      + '  <div class="impact-kpi-card"><div class="kpi-icon">🏬</div><div class="kpi-number">' + (metrics.total_restaurants || 6) + '</div><div class="kpi-label">Partner Kitchens</div></div>'
-      + '  <div class="impact-kpi-card"><div class="kpi-icon">🍛</div><div class="kpi-number">' + (metrics.meals_rescued || 15420) + '</div><div class="kpi-label">Total Rescued Meals</div></div>'
-      + '  <div class="impact-kpi-card"><div class="kpi-icon">💰</div><div class="kpi-number">₹' + ((metrics.money_saved_inr || 3420800) / 100000).toFixed(1) + 'L</div><div class="kpi-label">Total Value Recovered</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="kpi-number">' + (metrics.total_users || 4) + '</div><div class="kpi-label">Registered Users</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="kpi-number">' + (metrics.total_restaurants || 6) + '</div><div class="kpi-label">Partner Kitchens</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div><div class="kpi-number">' + (metrics.meals_rescued || 15420) + '</div><div class="kpi-label">Total Rescued Meals</div></div>'
+      + '  <div class="impact-kpi-card"><div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="kpi-number">₹' + ((metrics.money_saved_inr || 3420800) / 100000).toFixed(1) + 'L</div><div class="kpi-label">Total Value Recovered</div></div>'
       + '</div>'
 
       + '<div style="margin-bottom: 50px;">'
